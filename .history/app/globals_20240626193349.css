@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+      --background: 210 13% 97%; /* macOS light background color */
+      --foreground: 0 0% 0%; /* macOS light foreground color */
+
+      --card: 210 13% 97%; /* macOS light background color */
+      --card-foreground: 0 0% 0%; /* macOS light foreground color */
+
+      --popover: 210 13% 97%; /* macOS light background color */
+      --popover-foreground: 0 0% 0%; /* macOS light foreground color */
+
+      --primary: 221 73% 50%; /* macOS primary color */
+      --primary-foreground: 0 0% 100%; /* macOS light foreground color */
+
+      --secondary: 214 32% 91%; /* macOS secondary color */
+      --secondary-foreground: 0 0% 0%; /* macOS light foreground color */
+
+      --muted: 214 32% 91%; /* macOS muted color */
+      --muted-foreground: 0 0% 50%; /* macOS muted foreground color */
+
+      --accent: 214 32% 91%; /* macOS accent color */
+      --accent-foreground: 0 0% 0%; /* macOS light foreground color */
+
+      --destructive: 0 79% 63%; /* macOS destructive color */
+      --destructive-foreground: 0 0% 100%; /* macOS light foreground color */
+
+      --border: 214 32% 91%; /* macOS border color */
+      --input: 214 32% 91%; /* macOS input background color */
+      --ring: 221 73% 50%; /* macOS ring color */
+
+      --radius: 0.5rem; 
+  }
+
+  .dark {
+      --background: 0 0% 10%; /* macOS dark background color */
+      --foreground: 0 0% 100%; /* macOS dark foreground color */
+
+      --card: 0 0% 10%; /* macOS dark background color */
+      --card-foreground: 0 0% 100%; /* macOS dark foreground color */
+
+      --popover: 0 0% 10%; /* macOS dark background color */
+      --popover-foreground: 0 0% 100%; /* macOS dark foreground color */
+
+      --primary: 210 100% 50%; /* macOS primary color */
+      --primary-foreground: 0 0% 0%; /* macOS dark foreground color */
+
+      --secondary: 217 19% 35%; /* macOS dark secondary color */
+      --secondary-foreground: 0 0% 100%; /* macOS dark foreground color */
+
+      --muted: 217 19% 35%; /* macOS dark muted color */
+      --muted-foreground: 0 0% 75%; /* macOS dark muted foreground color */
+
+      --accent: 217 19% 35%; /* macOS dark accent color */
+      --accent-foreground: 0 0% 100%; /* macOS dark foreground color */
+
+      --destructive: 0 79% 50%; /* macOS dark destructive color */
+      --destructive-foreground: 0 0% 100%; /* macOS dark foreground color */
+
+      --border: 217 19% 35%; /* macOS dark border color */
+      --input: 217 19% 35%; /* macOS dark input background color */
+      --ring: 210 100% 50%; /* macOS dark ring color */
+  }
+}
+
+  @layer base {
+    * {
+      @apply border-border;
+    }
+    body {
+      @apply bg-back1 bg-cover text-foreground;
+    }
+    .lucidBarIcon{ 
+      @apply h-4 text-foreground
+    }
+    .bgblur{
+      @apply backdrop-blur-md;
+    }
+    .bgOpacity{
+      @apply !bg-background/20
+    } 
+    .card{
+    @apply !rounded-md !border !border-border/20 !p-2 !text-foreground  !drop-shadow-xl
+    }
+  }

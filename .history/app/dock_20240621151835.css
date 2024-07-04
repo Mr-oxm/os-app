@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    .dock > .item:hover{
+        @apply scale-[5];
+    } 
+    /* .dock > .item:hover + .item{
+        @apply scale-[3];
+    }  */
+    /* .dock > .item:hover + .item +.item{
+        @apply scale-[2];
+    } */
+    /* .dock > .item:hover .item{
+        @apply scale-[2];
+    } */
+    .dock{
+        @apply ease-in-out bg-black/15 backdrop-blur-sm p-2 rounded-xl flex flex-row gap-2 hover:gap-12 transition-all;
+    }
+}

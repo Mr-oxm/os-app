@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    .dock > .item:hover {
+        @apply scale-150;
+    } 
+    .dock > .item:hover + .item{
+        @apply scale-12;
+    } 
+    .dock > .item:hover + .item{
+        @apply scale-110;
+    } 
+}
