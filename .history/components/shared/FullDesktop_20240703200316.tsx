@@ -5,7 +5,6 @@ import MainTaskbar from "@/components/shared/taskbar/mainTaskbar"
 import MacTopbar from "@/components/shared/topbar/macTopbar"
 // import useThemeStore from "@/lib/Store/useThemeStore"
 import { useWallpaperStore } from '@/lib/Store/useWallpaperStore'
-import Windows11Taskbar from "./taskbar/windowsTaskbar"
 
 const FullDesktop = ({ children }: { children: React.ReactNode }) => {
     const wallpaper = useWallpaperStore((state) => state.wallpaper)
@@ -18,8 +17,7 @@ const FullDesktop = ({ children }: { children: React.ReactNode }) => {
         >
             <MacTopbar />
             <MainDesktopBody>{children}</MainDesktopBody>
-            {/* <MainTaskbar /> */}
-            <Windows11Taskbar/>
+            <MainTaskbar />
         </main>
     )
 }

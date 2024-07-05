@@ -19,7 +19,7 @@ const FullDesktop = ({ children }: { children: React.ReactNode }) => {
             <MacTopbar />
             <MainDesktopBody>{children}</MainDesktopBody>
             {/* <MainTaskbar /> */}
-            <Windows11Taskbar/>
+            <Windows11Taskbar
         </main>
     )
 }
