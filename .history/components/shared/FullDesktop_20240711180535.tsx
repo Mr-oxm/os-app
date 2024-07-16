@@ -1,0 +1,77 @@
+"use client"
+
+import { useState, useEffect } from 'react'
+import MainDesktopBody from "@/components/shared/desktopBody/mainDesktopBody"
+import MainTaskbar from "@/components/shared/taskbar/mainTaskbar"
+import MacTopbar from "@/components/shared/topbar/macTopbar"
+import Windows11Taskbar from "./taskbar/windowsTaskbar"
+import useAppStore from "@/lib/Store/useAppStore"
+import Loading from '@/components/shared/Loading' 
+import Image from 'next/image'
+import { Label } from '@radix-ui/react-context-menu'
+import { Button } from '../ui/button'
+import MainLockScreen from './lockscreens/MainLockScreen'
+
+const FullDesktop = ({ children }: { children: React.ReactNode }) => { 
+    const { mainbodyType, taskbarType, topbarType, wallpaper, firstboot, taskbarDir} = useAppStore()
+    const [isLoading, setIsLoading] = useState(true)
+    const [isLocked, setIsLocked] = useState(true)
+
+    useEffect(() => {
+        // Simulate page loading
+        const timer = setTimeout(() => {
+            setIsLoading(false)
+        }, 1000) // Adjust this value based on your actual loading time
+
+        return () => clearTimeout(timer)
+    }, [])
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                setIsLocked(true)
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange)
+        }
+    }, [])
+    
+    const taskBarComponents = [
+        <MainTaskbar key="main" />,
+        <Windows11Taskbar key="windows11" />, 
+    ]
+    const topBarComponents = [
+        <MacTopbar key="mac" />,
+        <></>,
+    ]
+
+    // if (isLoading) {
+    //     return <Loading />
+    // }
+    
+    // if(isLocked)return(
+    //     <MainLockScreen wallpaper={wallpaper} setIsLocked={setIsLocked}/>
+    // )
+    return (
+        <main 
+            className={`cursor-macos flex h-screen w-screen flex-col items-center justify-between max-h-screen max-w-screen overflow-hidden bg-cover bg-center`}
+            style={{ backgroundImage: `url('/wallpapers/${wallpaper}')` }}
+        >
+            {topBarComponents[topbarType]}
+            <div className={`flex relative ${taskbarDir==0? "flex-col":( taskbarDir==1? "flex-row":"flex-row-reverse")} flex-grow w-full items-center`}>
+                <MainDesktopBody>{children}</MainDesktopBody>
+                <span className='absolute bg-blue-300 w-full bottom-20 left-0 right-0 h-12'></span>
+                <div className='absolute -bottom-20 group-hover:bottom-1'>
+                    {taskBarComponents[taskbarType]}
+                </div>
+                
+            </div>
+        </main>
+    )
+}
+
+export default FullDesktop

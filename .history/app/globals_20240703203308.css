@@ -106,6 +106,4 @@
     .card{
     @apply !rounded-xl !border !border-border/20 !p-3 !text-foreground  !drop-shadow-lg
     }
-  }
-
-/*  */
+  } 

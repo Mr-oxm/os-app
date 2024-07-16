@@ -1,0 +1,13 @@
+import { Loader2 } from "lucide-react";
+import "../../globals.css"; 
+const page = () => {
+    return (
+        <div className="bg-background text-foreground w-screen h-screen">
+            <div>
+                <Loader2 className=" h-20 w-20 animate-spin" />
+                Please wait
+            </div>
+        </div>
+    )
+}
+export default page
