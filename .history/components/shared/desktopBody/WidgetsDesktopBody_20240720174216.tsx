@@ -1,0 +1,25 @@
+import useAppStore from "@/lib/Store/useAppStore"; 
+import WeatherWidget from "../widgets/WeatherWidget";
+import ClockWidget from "../widgets/ClockWidget";
+import MusicWidget from "../widgets/MusicWidget"; 
+import CalendarWidget from "../widgets/CalendarWidget";
+const MainDesktopBody = ({children}:any) => { 
+    const { taskbarDir } = useAppStore(); 
+
+    return ( 
+        <div className={`w-full ${taskbarDir ? "h-full" : "flex-grow"} md:flex flex-col grid grid-rows-3 relative`}>
+            {children}
+            {/* widgets here */}
+            <div className="flex flex-col  md:flex-row justify-between row">
+                <WeatherWidget />
+                <ClockWidget />
+                <CalendarWidget/>
+            </div> 
+            <div className="h-1/2 w-4/6 m-auto row-span-1">
+                <MusicWidget /> 
+            </div>
+        </div> 
+    );
+};
+
+export default MainDesktopBody;

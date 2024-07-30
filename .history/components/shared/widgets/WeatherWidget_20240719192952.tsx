@@ -1,0 +1,1 @@
+`https://api.openweathermap.org/data/2.5/weather?q=London&appid=${process.env.WEATHER_API_KEY}&units=metric`

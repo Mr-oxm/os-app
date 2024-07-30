@@ -1,4 +1,4 @@
- import useAppStore from "@/lib/Store/useAppStore"; 
+import useAppStore from "@/lib/Store/useAppStore"; 
 import WeatherWidget from "../widgets/WeatherWidget";
 import ClockWidget from "../widgets/ClockWidget";
 import MusicWidget from "../widgets/MusicWidget";

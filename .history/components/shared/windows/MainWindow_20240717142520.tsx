@@ -18,7 +18,7 @@ interface ButtonProps {
     windowType: number;
 }
 
-const MaWindow = ({
+const MainWindow = ({
     children,
     programId,
     minimized,
@@ -310,4 +310,4 @@ const WindowSplit=({handleSplit, windowDir}:{handleSplit:(direction:string)=>voi
         </TooltipContent>
     )
 }
-export default MaWindow;
+export default MainWindow;
