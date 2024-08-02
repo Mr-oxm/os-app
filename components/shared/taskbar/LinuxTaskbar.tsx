@@ -1,14 +1,16 @@
 "use client"
 import { useState } from "react";
 import { Button } from "@/components/ui/button"; 
-import { TaskbarIcons } from "@/lib/constants";
 import Image from "next/image"; 
 import useAppStore from "@/lib/Store/useAppStore";
 import useOSMemoryStore from "@/lib/Store/useOSMemoryStore";
+import { useTaskbarStore } from "@/lib/Store/useTaskbarStore";
+import TaskbarContextMenu from "./TaskbarContextMenu";
 
 export default function LinuxTaskbar() {
     const { iconsType, taskbarDir, taskbarPos } = useAppStore();
-    const { openProgram, openedPrograms, minimizeProgram, maximizeProgram } = useOSMemoryStore();
+    const {TaskbarIcons, openProgram}= useTaskbarStore();
+    const { openedPrograms, minimizeProgram, maximizeProgram } = useOSMemoryStore();
 
     const handleProgram = (id:any) => {
         const result = openedPrograms.find(program => program.id === id);
@@ -35,7 +37,7 @@ export default function LinuxTaskbar() {
             <div className={`flex ${taskbarDir===0 ? "flex-row h-full" : "flex-col w-full justify-center"} items-center gap-1`}>
                 {TaskbarIcons.map((icon, index) => ( 
                     icon.name !== "Launchpad" && (
-                        <div key={index} onClick={() => handleProgram(icon.id)}>
+                        <TaskbarContextMenu appId={icon.id} key={index}>
                             <Button 
                                 variant="ghost" 
                                 className={`p-1.5 border-transparent w-11 h-11 group border hover:border-accent/25 hover:bg-accent/40 ${
@@ -50,7 +52,7 @@ export default function LinuxTaskbar() {
                                     className="w-full h-full transition-all"
                                 />
                             </Button> 
-                        </div>
+                        </TaskbarContextMenu>
                     )
                 ))}
             </div> 

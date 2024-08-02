@@ -1,8 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { TaskbarIcons } from "@/lib/constants"; 
+import { Input } from "@/components/ui/input"; 
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import {  BellRing, Wifi, Volume2, Battery, ChevronUp } from "lucide-react";
 import Image from "next/image"; 
@@ -14,10 +13,14 @@ import useAppStore from "@/lib/Store/useAppStore";
 import useOSMemoryStore from "@/lib/Store/useOSMemoryStore";
 import Apple from '@/components/icons/apple'
 import OXMIcon2 from "@/components/icons/OXMIcon2";
+import { useTaskbarStore } from "@/lib/Store/useTaskbarStore";
+import { SystemAppsIcons } from "@/lib/constants";
+import TaskbarContextMenu from "./TaskbarContextMenu";
 
 export default function Windows11Taskbar() {
     const { iconsType, taskbarDir, taskbarPos } = useAppStore();
-    const { openProgram, openedPrograms, minimizeProgram, maximizeProgram } = useOSMemoryStore();
+    const {TaskbarIcons, openProgram}= useTaskbarStore();
+    const { openedPrograms, minimizeProgram, maximizeProgram } = useOSMemoryStore();
     const [isStartMenuOpen, setIsStartMenuOpen] = useState(false); 
     const [date, setDate] = useState(new Date());
     const [currentTime, setCurrentTime] = useState('');
@@ -79,14 +82,14 @@ export default function Windows11Taskbar() {
                             {windowsButtonIcons[iconsType]}
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-fit mx p-4 rounded-lg  bg-background/80 backdrop-blur-md mb-3" side="top">
-                        <div className="grid grid-rows-3 gap-4 w-full">
+                    <PopoverContent className="w-fit p-4 rounded-lg  bg-background/80 backdrop-blur-md mb-3" side="top">
+                        <div className="flex flex-col h-96 gap-4 w-auto">
                             <div className="col-span-3 w-full">
                                 <Input placeholder="Type here to search" className="mb-4 rounded-full w-full" />
                                 <h3 className="mb-2 font-semibold">Pinned</h3>
-                                <div className="flex flex-row gap-2  w-full">
-                                    {TaskbarIcons.map((icon, index) => (
-                                        <div key={index} className="w-1/6 h-20">
+                                <div className="grid grid-cols-6 gap-2  w-full">
+                                    {SystemAppsIcons.map((icon, index) => (
+                                        <div key={index} className=" h-20">
                                             <Button 
                                                 variant="ghost" 
                                                 className={`p-6 border-transparent w-full h-full group border hover:border-accent/25 hover:bg-accent/40 flex flex-col gap-2`}  
@@ -109,13 +112,12 @@ export default function Windows11Taskbar() {
                     </PopoverContent>
                 </Popover> 
                 {TaskbarIcons.map((icon, index) => (
-                    <div key={index}>
+                    <TaskbarContextMenu appId={icon.id} key={index}>
                         <Button 
                             variant="ghost" 
                             className={`p-1.5 border-transparent w-11 h-11 group border hover:border-accent/25 hover:bg-accent/40 ${
                                 openedPrograms.some(p => p.id === icon.id) ? 'bg-accent/40 border-accent/25' : 'hover:bg-accent/40'
                             }`}
-                            onClick={() => handleProgram(icon.id)}
                         >
                             <Image 
                                 src={icon.imgSrc[iconsType]} 
@@ -125,7 +127,7 @@ export default function Windows11Taskbar() {
                                 className="w-full h-full transition-all group-active:h-5 group-active:w-5"
                             />
                         </Button> 
-                    </div>
+                    </TaskbarContextMenu>
                 ))}
             </div>
 

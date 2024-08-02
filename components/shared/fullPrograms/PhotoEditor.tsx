@@ -8,8 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { 
     FiUpload, FiSave, FiRotateCw, FiCrop, FiEdit3, FiType, FiMove,
     FiSun, FiMoon, FiDroplet, FiCloudRain, FiFilter, FiAperture, FiLayers,
-    FiEyeOff,
-    FiEye
+    FiEyeOff, FiEye
 } from 'react-icons/fi';
 import { BsFillEraserFill, BsVectorPen, BsPaintBucket, BsMagic } from 'react-icons/bs';
 
@@ -24,12 +23,29 @@ interface Adjustments {
     invert: number;
 }
 
-interface Layer {
+interface BaseLayer {
     id: number;
-    image: HTMLImageElement;
+    type: 'image' | 'text';
+    position: { x: number; y: number };
+    size: { width: number; height: number };
     adjustments: Adjustments;
     visible: boolean;
 }
+
+interface ImageLayer extends BaseLayer {
+    type: 'image';
+    image: HTMLImageElement;
+}
+
+interface TextLayer extends BaseLayer {
+    type: 'text';
+    content: string;
+    font: string;
+    fontSize: number;
+    color: string;
+}
+
+type Layer = ImageLayer | TextLayer;
 
 type BlendMode = 'normal' | 'multiply' | 'screen' | 'overlay' | 'darken' | 'lighten' | 'color-dodge' | 'color-burn' | 'hard-light' | 'soft-light' | 'difference' | 'exclusion';
 
@@ -56,13 +72,11 @@ const PhotoEditor: React.FC = () => {
     const [history, setHistory] = useState<ImageData[]>([]);
     const [historyIndex, setHistoryIndex] = useState<number>(-1);
     const [blendMode, setBlendMode] = useState<BlendMode>('normal');
-
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-
     const [selectedLayerIndex, setSelectedLayerIndex] = useState<number | null>(null);
-    const [layerPositions, setLayerPositions] = useState<{ x: number; y: number }[]>([]);
     const [lastPosition, setLastPosition] = useState<{ x: number; y: number } | null>(null);
     const [shapeStart, setShapeStart] = useState<{ x: number; y: number } | null>(null);
+
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
         if (canvasRef.current && layers.length > 0) {
@@ -77,7 +91,7 @@ const PhotoEditor: React.FC = () => {
             reader.onload = (event: ProgressEvent<FileReader>) => {
                 const img = new Image();
                 img.onload = () => {
-                    addLayer(img);
+                    addImageLayer(img);
                 };
                 img.src = event.target?.result as string;
             };
@@ -85,16 +99,36 @@ const PhotoEditor: React.FC = () => {
         }
     };
 
-    const addLayer = (img: HTMLImageElement) => {
-        const newLayer: Layer = {
+    const addImageLayer = (img: HTMLImageElement) => {
+        const newLayer: ImageLayer = {
             id: Date.now(),
+            type: 'image',
             image: img,
+            position: { x: 0, y: 0 },
+            size: { width: img.width, height: img.height },
             adjustments: {...adjustments},
             visible: true,
         };
         setLayers(prevLayers => [...prevLayers, newLayer]);
         setActiveLayerIndex(layers.length);
         initializeCanvas(img);
+    };
+
+    const addTextLayer = (content: string, x: number, y: number) => {
+        const newLayer: TextLayer = {
+            id: Date.now(),
+            type: 'text',
+            content,
+            position: { x, y },
+            size: { width: 100, height: 30 }, // Estimate initial size
+            font: 'Arial',
+            fontSize: brushSize,
+            color: brushColor,
+            adjustments: {...adjustments},
+            visible: true,
+        };
+        setLayers(prevLayers => [...prevLayers, newLayer]);
+        setActiveLayerIndex(layers.length);
     };
 
     const initializeCanvas = (img: HTMLImageElement) => {
@@ -119,10 +153,9 @@ const PhotoEditor: React.FC = () => {
             if (!layer.visible) return;
 
             ctx.save();
-            ctx.translate(canvas.width/2, canvas.height/2);
+            ctx.translate(layer.position.x, layer.position.y);
             ctx.rotate(rotation * Math.PI / 180);
             ctx.scale(zoom / 100, zoom / 100);
-            ctx.translate(-canvas.width/2, -canvas.height/2);
 
             ctx.globalCompositeOperation = index === 0 ? 'source-over' : blendMode;
 
@@ -137,24 +170,22 @@ const PhotoEditor: React.FC = () => {
                 invert(${layer.adjustments.invert}%)
             `;
 
-            ctx.drawImage(layer.image, 0, 0);
+            if (layer.type === 'image') {
+                ctx.drawImage(layer.image, 0, 0, layer.size.width, layer.size.height);
+            } else if (layer.type === 'text') {
+                ctx.font = `${layer.fontSize}px ${layer.font}`;
+                ctx.fillStyle = layer.color;
+                ctx.fillText(layer.content, 0, layer.fontSize);
+            }
+
             ctx.restore();
+
+            if (index === selectedLayerIndex) {
+                ctx.strokeStyle = 'blue';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(layer.position.x, layer.position.y, layer.size.width, layer.size.height);
+            }
         });
-        if (selectedLayerIndex !== null) {
-            const layer = layers[selectedLayerIndex];
-            const position = layerPositions[selectedLayerIndex] || { x: 0, y: 0 };
-            ctx.strokeStyle = 'blue';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(position.x, position.y, layer.image.width, layer.image.height);
-            
-            // Draw resize handles
-            const handleSize = 10;
-            ctx.fillStyle = 'blue';
-            ctx.fillRect(position.x - handleSize / 2, position.y - handleSize / 2, handleSize, handleSize);
-            ctx.fillRect(position.x + layer.image.width - handleSize / 2, position.y - handleSize / 2, handleSize, handleSize);
-            ctx.fillRect(position.x - handleSize / 2, position.y + layer.image.height - handleSize / 2, handleSize, handleSize);
-            ctx.fillRect(position.x + layer.image.width - handleSize / 2, position.y + layer.image.height - handleSize / 2, handleSize, handleSize);
-        }
     };
 
     const addToHistory = () => {
@@ -189,68 +220,117 @@ const PhotoEditor: React.FC = () => {
         ctx.putImageData(imageData, 0, 0);
     };
 
-    const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        setIsDrawing(true);
-        draw(e);
+    const handleToolAction = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        if (!canvasRef.current) return;
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+        switch (tool) {
+            case 'brush':
+            case 'eraser':
+                handleBrush(x, y);
+                break;
+            case 'text':
+                if (!isDrawing) {
+                    addTextLayer(text, x, y);
+                    renderCanvas();
+                    addToHistory();
+                }
+                break;
+            case 'move':
+                handleMove(x, y);
+                break;
+            case 'crop':
+                // Implement crop logic
+                break;
+            case 'shape':
+                handleShape(x, y);
+                break;
+            default:
+                console.log('Tool not implemented');
+        }
     };
 
-    const stopDrawing = () => {
-        setIsDrawing(false);
+    const handleBrush = (x: number, y: number) => {
         const ctx = canvasRef.current?.getContext('2d');
-        if (ctx) {
+        if (!ctx || !isDrawing) return;
+
+        ctx.beginPath();
+        ctx.moveTo(lastPosition?.x ?? x, lastPosition?.y ?? y);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = tool === 'eraser' ? '#FFFFFF' : brushColor;
+        ctx.lineWidth = brushSize;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        setLastPosition({ x, y });
+    };
+
+    const handleMove = (x: number, y: number) => {
+        if (selectedLayerIndex !== null && isDrawing) {
+            setLayers(prevLayers => prevLayers.map((layer, index) => 
+                index === selectedLayerIndex
+                    ? { ...layer, position: { x: x - layer.size.width / 2, y: y - layer.size.height / 2 } }
+                    : layer
+            ));
+        }
+    };
+
+    const handleShape = (x: number, y: number) => {
+        const ctx = canvasRef.current?.getContext('2d');
+        if (!ctx) return;
+
+        if (!isDrawing) {
+            setShapeStart({ x, y });
+        } else if (shapeStart) {
             ctx.beginPath();
+            ctx.rect(shapeStart.x, shapeStart.y, x - shapeStart.x, y - shapeStart.y);
+            ctx.strokeStyle = brushColor;
+            ctx.lineWidth = brushSize;
+            ctx.stroke();
+            setShapeStart(null);
             addToHistory();
         }
     };
 
-    const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        if (!isDrawing || !canvasRef.current) return;
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
-
-        ctx.lineWidth = brushSize;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = tool === 'eraser' ? '#FFFFFF' : brushColor;
-
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-    };
-
-    const addText = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        if (tool !== 'text' || !canvasRef.current) return;
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
-        
-        ctx.font = `${brushSize}px Arial`;
-        ctx.fillStyle = brushColor;
-        ctx.fillText(text, x, y);
-        
-        addToHistory();
-    };
-
-    const saveImage = () => {
-        const link = document.createElement('a');
-        link.download = 'edited_image.png';
-        if (canvasRef.current) {
-            link.href = canvasRef.current.toDataURL();
-        }
-        link.click();
-    };
-
     const applyEffect = (effect: string) => {
-        // Implement effect logic here
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        switch (effect) {
+            case 'glow':
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = 'rgba(255, 255, 255, 0.7)';
+                break;
+            case 'shadow':
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+                break;
+            case 'vintage':
+                ctx.filter = 'sepia(50%) contrast(150%) saturate(80%)';
+                break;
+            case 'vignette':
+                const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width/2);
+                gradient.addColorStop(0, 'rgba(0,0,0,0)');
+                gradient.addColorStop(1, 'rgba(0,0,0,0.5)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                break;
+            default:
+                console.log('Effect not implemented');
+        }
+
+        renderCanvas();
+        addToHistory();
+
+        // Reset effects
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = 'transparent';
+        ctx.filter = 'none';
     };
 
     const toggleLayerVisibility = (index: number) => {
@@ -268,148 +348,13 @@ const PhotoEditor: React.FC = () => {
         });
     };
 
-    const getPixelColor = (imageData: ImageData, x: number, y: number) => {
-        const index = (y * imageData.width + x) * 4;
-        return {
-            r: imageData.data[index],
-            g: imageData.data[index + 1],
-            b: imageData.data[index + 2],
-            a: imageData.data[index + 3]
-        };
-    };
-    
-    const setPixelColor = (imageData: ImageData, x: number, y: number, color: { r: number, g: number, b: number, a: number }) => {
-        const index = (y * imageData.width + x) * 4;
-        imageData.data[index] = color.r;
-        imageData.data[index + 1] = color.g;
-        imageData.data[index + 2] = color.b;
-        imageData.data[index + 3] = color.a;
-    };
-    
-    const colorMatch = (color1: { r: number, g: number, b: number, a: number }, color2: { r: number, g: number, b: number, a: number }) => {
-        return color1.r === color2.r && color1.g === color2.g && color1.b === color2.b && color1.a === color2.a;
-    };
-    
-    const floodFill = (imageData: ImageData, x: number, y: number, targetColor: { r: number, g: number, b: number, a: number }, fillColor: { r: number, g: number, b: number, a: number }) => {
-        const stack = [{x, y}];
-        const width = imageData.width;
-        const height = imageData.height;
-    
-        while (stack.length > 0) {
-            const pixel = stack.pop()!;
-            if (pixel.x < 0 || pixel.x >= width || pixel.y < 0 || pixel.y >= height) continue;
-    
-            const currentColor = getPixelColor(imageData, pixel.x, pixel.y);
-            if (!colorMatch(currentColor, targetColor)) continue;
-    
-            setPixelColor(imageData, pixel.x, pixel.y, fillColor);
-    
-            stack.push({x: pixel.x + 1, y: pixel.y});
-            stack.push({x: pixel.x - 1, y: pixel.y});
-            stack.push({x: pixel.x, y: pixel.y + 1});
-            stack.push({x: pixel.x, y: pixel.y - 1});
+    const saveImage = () => {
+        const link = document.createElement('a');
+        link.download = 'edited_image.png';
+        if (canvasRef.current) {
+            link.href = canvasRef.current.toDataURL();
         }
-    };
-    
-    const hexToRgb = (hex: string) => {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16),
-            a: 255
-        } : {r: 0, g: 0, b: 0, a: 255};
-    };
-
-    const handleToolAction = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        if (!canvasRef.current) return;
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-    
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
-    
-        switch (tool) {
-            case 'brush':
-            case 'eraser':
-                if (isDrawing) {
-                    ctx.beginPath();
-                    ctx.moveTo(lastPosition?.x ?? x, lastPosition?.y ?? y);
-                    ctx.lineTo(x, y);
-                    ctx.strokeStyle = tool === 'eraser' ? '#FFFFFF' : brushColor;
-                    ctx.lineWidth = brushSize;
-                    ctx.lineCap = 'round';
-                    ctx.stroke();
-                }
-                setLastPosition({ x, y });
-                break;
-    
-            case 'text':
-                ctx.font = `${brushSize}px Arial`;
-                ctx.fillStyle = brushColor;
-                ctx.fillText(text, x, y);
-                addToHistory();
-                break;
-    
-            case 'bucket':
-                // Simplified flood fill algorithm
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const targetColor = getPixelColor(imageData, Math.floor(x), Math.floor(y));
-                floodFill(imageData, Math.floor(x), Math.floor(y), targetColor, hexToRgb(brushColor));
-                ctx.putImageData(imageData, 0, 0);
-                addToHistory();
-                break;
-    
-            case 'pen':
-                if (isDrawing) {
-                    ctx.beginPath();
-                    ctx.moveTo(lastPosition?.x ?? x, lastPosition?.y ?? y);
-                    ctx.lineTo(x, y);
-                    ctx.strokeStyle = brushColor;
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
-                setLastPosition({ x, y });
-                break;
-    
-            case 'shape':
-                if (!isDrawing) {
-                    setShapeStart({ x, y });
-                } else if (shapeStart) {
-                    ctx.beginPath();
-                    ctx.rect(shapeStart.x, shapeStart.y, x - shapeStart.x, y - shapeStart.y);
-                    ctx.strokeStyle = brushColor;
-                    ctx.lineWidth = brushSize;
-                    ctx.stroke();
-                    setShapeStart(null);
-                    addToHistory();
-                }
-                break;
-    
-            case 'move':
-                if (selectedLayerIndex !== null) {
-                    const newPositions = [...layerPositions];
-                    newPositions[selectedLayerIndex] = {
-                        x: x - canvas.width / 2,
-                        y: y - canvas.height / 2
-                    };
-                    setLayerPositions(newPositions);
-                }
-                break;
-    
-            case 'crop':
-                // Implement crop logic here
-                break;
-    
-            case 'magic':
-                // Implement magic wand selection tool here
-                break;
-    
-            default:
-                console.log('Tool not implemented');
-        }
+        link.click();
     };
 
     return (
@@ -417,7 +362,7 @@ const PhotoEditor: React.FC = () => {
             <div className="w-64 bgOpacity card overflow-y-auto card ">
                 <h2 className="text-2xl font-bold mb-4">Tools</h2>
                 <div className="grid grid-cols-3 gap-2">
-                    {['brush', 'eraser', 'text', 'move', 'crop', 'pen', 'bucket', 'magic', 'shape'].map((t) => (
+                    {['brush', 'eraser', 'text', 'move', 'crop', 'shape'].map((t) => (
                         <Button 
                             key={t} 
                             onClick={() => setTool(t)}
@@ -428,9 +373,6 @@ const PhotoEditor: React.FC = () => {
                             {t === 'text' && <FiType />}
                             {t === 'move' && <FiMove />}
                             {t === 'crop' && <FiCrop />}
-                            {t === 'pen' && <BsVectorPen />}
-                            {t === 'bucket' && <BsPaintBucket />}
-                            {t === 'magic' && <BsMagic />}
                             {t === 'shape' && '⬡'}
                         </Button>
                     ))}
@@ -469,9 +411,9 @@ const PhotoEditor: React.FC = () => {
                     <Input type="file" onChange={handleImageUpload} />
                 </div>
             </div>
-            <div className="flex-1 flex gap-4 flex-col items-center  bgOpacity card  overflow-hidden">
+            <div className="flex-1 flex gap-4 flex-col items-center bgOpacity card overflow-hidden">
                 <div className="flex justify-between gap-2 w-full">
-                    <Input type="file" onChange={handleImageUpload}  />
+                    <Input type="file" onChange={handleImageUpload} />
                     <Button onClick={saveImage}><FiSave /> Save</Button>
                 </div>
                 <canvas
@@ -494,7 +436,7 @@ const PhotoEditor: React.FC = () => {
                     onMouseMove={handleToolAction}
                 />
             </div>
-            <div className="w-64 bgOpacity card  overflow-y-auto ">
+            <div className="w-64 bgOpacity card overflow-y-auto">
                 <Tabs defaultValue="adjust">
                     <TabsList className="w-full bg-gray-700">
                         <TabsTrigger value="adjust">Adjust</TabsTrigger>
@@ -526,8 +468,6 @@ const PhotoEditor: React.FC = () => {
                         <div className="grid grid-cols-2 gap-2">
                             <Button onClick={() => applyEffect('glow')}><FiSun /> Glow</Button>
                             <Button onClick={() => applyEffect('shadow')}><FiMoon /> Shadow</Button>
-                            <Button onClick={() => applyEffect('liquify')}><FiDroplet /> Liquify</Button>
-                            <Button onClick={() => applyEffect('rain')}><FiCloudRain /> Rain</Button>
                             <Button onClick={() => applyEffect('vintage')}><FiFilter /> Vintage</Button>
                             <Button onClick={() => applyEffect('vignette')}><FiAperture /> Vignette</Button>
                         </div>
@@ -543,12 +483,17 @@ const PhotoEditor: React.FC = () => {
                                     <Button onClick={() => toggleLayerVisibility(index)}>
                                         {layer.visible ? <FiEye /> : <FiEyeOff />}
                                     </Button>
-                                    <span>Layer {index + 1}</span>
-                                    <img 
-                                        src={layer.image.src} 
-                                        alt={`Layer ${index + 1} preview`} 
-                                        className="w-10 h-10 object-cover"
-                                    />
+                                    <span>{layer.type === 'image' ? `Image ${index + 1}` : `Text ${index + 1}`}</span>
+                                    {layer.type === 'image' && (
+                                        <img 
+                                            src={layer.image.src} 
+                                            alt={`Layer ${index + 1} preview`} 
+                                            className="w-10 h-10 object-cover"
+                                        />
+                                    )}
+                                    {layer.type === 'text' && (
+                                        <span className="w-10 h-10 flex items-center justify-center">{layer.content.substring(0, 2)}</span>
+                                    )}
                                     <div>
                                         <Button onClick={() => moveLayer(index, Math.max(0, index - 1))} disabled={index === 0}>↑</Button>
                                         <Button onClick={() => moveLayer(index, Math.min(layers.length - 1, index + 1))} disabled={index === layers.length - 1}>↓</Button>
@@ -556,7 +501,7 @@ const PhotoEditor: React.FC = () => {
                                 </div>
                             ))}
                         </div>
-</TabsContent>
+                    </TabsContent>
                 </Tabs>
             </div>
         </div>

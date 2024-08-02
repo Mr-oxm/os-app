@@ -130,7 +130,7 @@ const VideoPlayer: React.FC = () => {
                                 variant="ghost"
                                 size="icon"
                                 onClick={togglePlay}
-                                className="lucidBarIcon"
+                                className="btn !rounded-full"
                             >
                                 {isPlaying ? <FaPause /> : <FaPlay />}
                             </Button>
@@ -138,7 +138,7 @@ const VideoPlayer: React.FC = () => {
                                 variant="ghost"
                                 size="icon"
                                 onClick={toggleMute}
-                                className="lucidBarIcon"
+                                className="btn !rounded-full"
                             >
                                 {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
                             </Button>
@@ -158,7 +158,7 @@ const VideoPlayer: React.FC = () => {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="lucidBarIcon bg-background/50 hover:bg-background/70"
+                                className="btn !rounded-full"
                             >
                                 <FaFolder />
                             </Button>
@@ -172,7 +172,7 @@ const VideoPlayer: React.FC = () => {
                             <Button 
                             variant="ghost" 
                             size="icon" 
-                            className="lucidBarIcon"
+                            className="btn !rounded-full"
                             onClick={toggleFullscreen}
                             >
                                 {isFullscreen ? <FaCompress /> : <FaExpand />}

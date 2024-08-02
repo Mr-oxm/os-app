@@ -7,6 +7,7 @@ import useOSMemoryStore from '@/lib/Store/useOSMemoryStore';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ImCross, ImMinus } from "react-icons/im";
 import { FaMaximize } from "react-icons/fa6";
+import { useTaskbarStore } from '@/lib/Store/useTaskbarStore';
 
 
 interface ButtonProps {
@@ -38,7 +39,8 @@ const MainWindow = ({
     const [size, setSize] = useState({ width: '100%', height: '100%' });
     const [resizeDirection, setResizeDirection] = useState('');
     const { windowType, windowDir } = useAppStore();
-    const { closeProgram, minimizeProgram, active, setActive } = useOSMemoryStore();
+    const { minimizeProgram, active, setActive } = useOSMemoryStore();
+    const {closeProgram}= useTaskbarStore();
 
     const handleExit = () => {
         closeProgram(programId);

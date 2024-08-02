@@ -4,9 +4,10 @@ import { Calendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
-import { TaskbarIcons } from "@/lib/constants";
+import { SystemAppsIcons } from "@/lib/constants";
 import useAppStore from "@/lib/Store/useAppStore";
 import useOSMemoryStore from "@/lib/Store/useOSMemoryStore";
+import { useTaskbarStore } from "@/lib/Store/useTaskbarStore";
 import { Label } from "@radix-ui/react-context-menu";
 import { Battery, Volume2, Wifi } from "lucide-react";
 import Image from "next/image";
@@ -26,7 +27,8 @@ const formatDate = (date:Date) => {
 
 const LinuxTopbar = () => {
     const { iconsType, taskbarDir, taskbarPos } = useAppStore();
-    const { openProgram, openedPrograms, minimizeProgram, maximizeProgram, active } = useOSMemoryStore();
+    const { openedPrograms, minimizeProgram, maximizeProgram, active } = useOSMemoryStore();
+    const {openProgram}= useTaskbarStore();
     const [currentDate, setCurrentDate] = useState(new Date()); 
 
     useEffect(() => {
@@ -57,7 +59,7 @@ const LinuxTopbar = () => {
                     <DialogContent className="flex flex-col items-center h-fit bgblur bg-background/80 card w-screen">
                         <Label>Applications</Label>
                         <div className="flex flex-row flex-wrap items-center justify-center gap-4">
-                            {TaskbarIcons.map((icon, index) => (
+                            {SystemAppsIcons.map((icon, index) => (
                                 <div key={index} onClick={() => handleProgram(icon.id)}>
                                     <Button variant="ghost" className={`p-1.5 border-transparent w-20 h-20 group border hover:border-accent/25 hover:bg-accent/40 ${
                                         openedPrograms.some(p => p.id === icon.id) ? 'bg-accent/40' : 'hover:bg-accent/40'

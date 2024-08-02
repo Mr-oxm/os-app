@@ -65,7 +65,7 @@ const SidebarSection: React.FC<{ item: SidebarItem }> = ({ item }) => {
 
     return (
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-            <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 rounded-lg hover:bg-accent cursor-pointer">
+            <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 rounded-lg hover:bgOpacity cursor-pointer">
                 <div className="flex items-center space-x-2">
                     {item.icon}
                     <span>{item.name}</span>
@@ -216,13 +216,13 @@ const FinderApp: React.FC = () => {
         <div className='flex flex-col items-center card !rounded-t-none bgOpacity gap-1 !p-2'>
             <div className="flex items-center w-full">
                 <div className='flex flex-row gap-2 w-1/4 justify-start'>
-                    <Button variant="ghost" size="icon" onClick={() => setSidebarVisible(!sidebarVisible)}>
+                    <Button variant="ghost" size="icon" className='btn !rounded-full' onClick={() => setSidebarVisible(!sidebarVisible)}>
                         <AiOutlineMenu className="lucidBarIcon" />
                     </Button>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className='btn !rounded-full'>
                         <IoMdArrowBack className="lucidBarIcon" />
                     </Button>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className='btn !rounded-full'>
                         <IoMdArrowForward className="lucidBarIcon" />
                     </Button>
                 </div>
@@ -234,13 +234,13 @@ const FinderApp: React.FC = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className='btn !rounded-full'>
                         <IoMdSearch className="lucidBarIcon" />
                     </Button> 
                 </div>
 
                 <div className='flex flex-row gap-2 w-1/4 justify-end'>
-                    <Button variant="ghost" size="icon" onClick={handleCreateNewFolder}>
+                    <Button variant="ghost" size="icon" className='btn !rounded-full' onClick={handleCreateNewFolder}>
                         <MdCreateNewFolder className="lucidBarIcon" />
                     </Button>
                     <Input
@@ -250,13 +250,13 @@ const FinderApp: React.FC = () => {
                         id="file-upload"
                     />
                     <label htmlFor="file-upload" className="cursor-pointer">
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" className='btn !rounded-full'>
                             <FaUpload className="lucidBarIcon" />
                         </Button>
                     </label>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon" className='btn !rounded-full'>
                                 <FaSort className="lucidBarIcon" />
                             </Button>
                         </DropdownMenuTrigger>
@@ -268,14 +268,14 @@ const FinderApp: React.FC = () => {
                     </DropdownMenu>
                     <Button
                         variant="ghost"
-                        size="icon"
+                        size="icon" className='btn !rounded-full'
                         onClick={() => setViewMode('grid')}
                     >
                         <BsGrid3X3Gap className={`lucidBarIcon ${viewMode === 'grid' ? 'text-primary' : ''}`} />
                     </Button>
                     <Button
                         variant="ghost"
-                        size="icon"
+                        size="icon" className='btn !rounded-full'
                         onClick={() => setViewMode('list')}
                     >
                         <BsListUl className={`lucidBarIcon ${viewMode === 'list' ? 'text-primary' : ''}`} />
@@ -316,7 +316,7 @@ const FinderApp: React.FC = () => {
             onRename={() => setEditingId(item.id)}
         >
             <div
-                className={`flex items-center ${viewMode === 'grid' ? 'flex-col' : 'space-x-2'} p-2 rounded-lg hover:bg-accent cursor-pointer ${selectedItems.includes(item.id) ? 'bg-primary/20' : ''}`}
+                className={`flex items-center ${viewMode === 'grid' ? 'flex-col' : 'space-x-2'} p-2 rounded-lg hover:bgOpacity cursor-pointer ${selectedItems.includes(item.id) ? 'bg-primary/20' : ''}`}
                 onClick={(e) => handleItemClick(item.id, e)}
             >
                 {item.type === 'folder' ? (

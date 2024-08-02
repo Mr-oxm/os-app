@@ -4,7 +4,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
-import { TaskbarIcons } from "@/lib/constants";
+import { SystemAppsIcons } from "@/lib/constants";
 import useAppStore from "@/lib/Store/useAppStore";
 import useOSMemoryStore from "@/lib/Store/useOSMemoryStore";
 import { Label } from "@radix-ui/react-context-menu";
@@ -20,6 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { IoAccessibility, IoAirplaneSharp, IoLogOutOutline } from "react-icons/io5";
 import { BsBrightnessHighFill } from "react-icons/bs";
 import { FaLocationArrow, FaVolumeXmark } from "react-icons/fa6";
+import { useTaskbarStore } from "@/lib/Store/useTaskbarStore";
 const formatDate = (date:Date) => {
     const options:any = { 
         day: '2-digit', 
@@ -141,7 +142,8 @@ function SystemTrayMenu() {
 
 const OXMenu=()=>{
     const { iconsType } = useAppStore();
-    const { openProgram, openedPrograms, minimizeProgram, maximizeProgram, active } = useOSMemoryStore();
+    const {openedPrograms, minimizeProgram, maximizeProgram, active } = useOSMemoryStore();
+    const {openProgram}= useTaskbarStore();
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleProgram = (id:any) => {
@@ -153,7 +155,7 @@ const OXMenu=()=>{
         }
     }
     // Filter icons based on search term
-    const filteredIcons = TaskbarIcons.filter(icon => 
+    const filteredIcons = SystemAppsIcons.filter(icon => 
         icon.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 

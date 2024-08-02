@@ -53,7 +53,7 @@ const MacRightbar = () => {
                     <DropdownMenuTrigger className={`bg-transparent !py-0 !px-3 h-full !text-foreground !text-xs hover:bg-background/40 rounded-sm transition-all ease-in-out !border-transparent hover:!border-border/20 card ${item.className || ''}`}>
                         {item.icon || item.label}
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="p-2 w-auto md:w-80 text-foreground card bgOpacity bgblur hover:bgOpacity">
+                    <DropdownMenuContent className="!p-2 w-auto md:w-80 text-foreground card bgOpacity bgblur hover:bgOpacity mt-2">
                         {item.content}
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -66,16 +66,16 @@ export default MacRightbar
 
 const SettingsMenu = () => {
     const settingsIcon=[
-        {name:"Wifi", icon:<Wifi/>, status:false},
-        {name:"Bluetooth", icon:<Bluetooth/>, status:false},
-        {name:"Airdrop", icon:<Share/>, status:false},
+        {name:"Wifi", icon:<Wifi className="lucidBarIcon"/>, status:false},
+        {name:"Bluetooth", icon:<Bluetooth className="lucidBarIcon"/>, status:false},
+        {name:"Airdrop", icon:<Share className="lucidBarIcon"/>, status:false},
     ]
     return(
         <div className="grid grid-cols-4 grid-rows-4 w-full !text-xs gap-2">
             <div className="flex flex-col gap-4 bgOpacity card row-span-2 col-span-2 ">
                 {settingsIcon.map((icon, index) => (
                     <div key={index} className="flex flex-row gap-2 items-center">
-                        <Toggle className="bgOpacity rounded-full w-10 h-10 p-1 !text-foreground ">
+                        <Toggle className="btn !rounded-full w-10 h-10">
                             {icon.icon}
                         </Toggle>
                         <div className="flex flex-col gap-1 ">
@@ -86,17 +86,17 @@ const SettingsMenu = () => {
                 ))}
             </div> 
             <div className="col-span-2 row-span-1 bgOpacity card flex flex-row gap-2 items-center">
-                <Toggle className="bgOpacity rounded-full w-10 h-10 p-1">
-                    <Moon/>
+                <Toggle className="btn !rounded-full w-10 h-10">
+                    <Moon className="lucidBarIcon"/>
                 </Toggle>
                 <Label className=" !text-xs">Do Not Disturb</Label>
             </div>
             <div className="bgOpacity card flex flex-col gap-2 items-center col-span-1 row-span-1">
-                <Sun/>
+                <Sun className="lucidBarIcon"/>
                 <Label className=" !text-xs text-center">Keyboard Brightness</Label>
             </div> 
             <div className="bgOpacity card flex flex-col gap-2 items-center col-span-1 row-span-1">
-                <Copy/>
+                <Copy className="lucidBarIcon"/>
                 <Label className=" !text-xs text-center">Screen Mirroring</Label>
             </div> 
             {['Display', 'Sound'].map((label, index) => (

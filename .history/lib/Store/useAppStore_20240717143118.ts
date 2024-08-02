@@ -20,7 +20,7 @@ interface AppState {
     bootAnimation: number;
 
     setFirstboot: (value: boolean) => void;
-    setSysTheme: (value: str) => void;
+    setSysTheme: (value: string) => void;
     setWallpaper: (value: string) => void;
     setIconsType: (value: number) => void;
     setTopbarType: (value: number) => void;

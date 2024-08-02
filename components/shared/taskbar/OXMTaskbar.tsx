@@ -1,20 +1,13 @@
-import { TaskbarIcons } from "@/lib/constants";
 import useAppStore from "@/lib/Store/useAppStore";
 import OXMDockIcon from "../desktopIcons/OXMDockIcon";
 import useOSMemoryStore from "@/lib/Store/useOSMemoryStore";
+import { useTaskbarStore } from "@/lib/Store/useTaskbarStore";
+import TaskbarContextMenu from "./TaskbarContextMenu";
 
 const OXMTaskbar = () => {
     const { iconsType, taskbarDir } = useAppStore();
-    const {openProgram, openedPrograms, minimizeProgram, maximizeProgram} = useOSMemoryStore();
-    
-    const handleProgram = (id:string) => {
-        const result = openedPrograms.find(program => program.id === id);
-        if (result) {
-            result.minimized ? maximizeProgram(id) : minimizeProgram(id);
-        } else {
-            openProgram(id);
-        }
-    }  
+    const {openedPrograms} = useOSMemoryStore();
+    const {TaskbarIcons}= useTaskbarStore(); 
 
     return (
         <div className={`taskbar-buffer absolute card bg-background/50 hover:bg-background/15 hover:!border-2 hover:!border-backbg-background/50 delay-75 transition-all bgblur !rounded-full duration-200 group/show ease-in-out z-50 ${
@@ -26,9 +19,8 @@ const OXMTaskbar = () => {
         }`}>
             <div className={`opacity-0 group-hover/show:opacity-100  flex transition-all  gap-2  ease-linear ${taskbarDir===0?"flex-row h-full group-hover/show:w-fit":"flex-col"}`}>
                 {TaskbarIcons.map((icon, index) => (
-                    <div
+                    <TaskbarContextMenu appId={icon.id}
                         key={index}
-                        onClick={() => handleProgram(icon.id)}
                         className={`transition-all group/button ease-linear relative duration-100 mb-0  active:scale-150 delay-75 text-center ${taskbarDir===0?"hover:mb-3":(taskbarDir===1?"hover:mr-3":"hover:ml-3")}
                         }`}
                     >
@@ -36,7 +28,7 @@ const OXMTaskbar = () => {
                         <span className={`${
                             openedPrograms.some(p => p.id === icon.id) ? '' : 'hidden'}  absolute   transition-all w-1 h-1 bg-foreground rounded-full ${taskbarDir===0 && "-bottom-0 group-hover/button:-bottom-2"}
                         }`}></span>
-                    </div>
+                    </TaskbarContextMenu>
                 ))}
             </div>
         </div>

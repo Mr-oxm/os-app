@@ -8,6 +8,8 @@ import VideoPlayer from '@/components/shared/fullPrograms/VideoPlayer';
 import Gallery from '@/components/shared/fullPrograms/Gallary';
 import PhotoEditor from '@/components/shared/fullPrograms/PhotoEditor';
 import Camera from '@/components/shared/fullPrograms/Camera';
+import MusicApp from '@/components/shared/fullPrograms/MusicApp';
+import VoiceRecorder from '@/components/shared/fullPrograms/VoiceRecorder';
 
 interface Program {
     id: string;
@@ -40,10 +42,11 @@ const useOSMemoryStore = create<AppState>((set) => ({
         { id: 'terminal', name: 'Terminal', component: TerminalApp },
         { id: 'calculator', name: 'Calculator', component: CalculatorApp },
         { id: 'finder', name: 'Finder', component: FinderApp },
-        { id: 'trash', name: 'Trash', component: FinderApp },
+        { id: 'trash', name: 'Trash', component: VoiceRecorder },
         { id: 'player', name: 'Player', component: VideoPlayer },
         { id: 'gallery', name: 'Gallery', component: Gallery },
         { id: 'camera', name: 'Camera', component: Camera },
+        { id: 'music', name: 'Music', component: MusicApp },
     ],
     openedPrograms: [],
     openProgram: (id) => set((state) => {
