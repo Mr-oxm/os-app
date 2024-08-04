@@ -126,16 +126,17 @@ const Gallery = () => {
     return (
         <div className="h-full card relative">
                 <div className="flex flex-col h-full gap-4">
-                    <div className="flex items-center justify-between card bgOpacity p-4"> 
+                    <div className="flex items-center justify-between card bgOpacity p-4 gap-2"> 
                             
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" className="flex items-center">
-                                    <FiFilter className="mr-2" />
-                                    Sort: {sortBy === 'date' ? 'Date' : 'Name'}
+                                    <Button variant="outline" className="flex gap-2 items-center btn !p-4">
+                                    <FiFilter className="" />
+                                    <span className='hidden md:block'>Sort: {sortBy === 'date' ? 'Date' : 'Name'}</span>
+                                    
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent>
+                                <DropdownMenuContent className='bgOpacity bgblur card'>
                                     <DropdownMenuItem onClick={() => setSortBy('date')}>
                                     Sort by Date
                                     </DropdownMenuItem>
@@ -156,9 +157,9 @@ const Gallery = () => {
                             </div>
 
                             <div>
-                                <Button onClick={handleSelectFolderClick} className="flex items-center text-primary-foreground">
-                                <FiFolder className="mr-2 text-primary-foreground lucidBarIcon " />
-                                Select Folder
+                                <Button onClick={handleSelectFolderClick} className="flex items-center text-primary-foreground gap-2 card">
+                                <FiFolder className=" text-primary-foreground lucidBarIcon " />
+                                <span className='hidden md:block'>Select Folder</span>
                                 </Button>
                             </div> 
                     </div>
@@ -209,6 +210,7 @@ const Gallery = () => {
                 webkitdirectory=""
                 directory=""
                 style={{ display: 'none' }}
+                {...({} as { webkitdirectory?: string, directory?: string })}
             />
 
             {previewPhoto && (

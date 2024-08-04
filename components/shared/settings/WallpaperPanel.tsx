@@ -25,7 +25,7 @@ const WallpaperPanel = () => {
                 {wallpapers.map((wallpaper, index) => (
                     <div 
                         key={index} 
-                        className={`card bgOpacity cursor-pointer h-48 overflow-hidden hover:ring-2  ${currentWallpaper === wallpaper ? 'ring-2 ring-primary' : ''}`}
+                        className={`h-48 ${currentWallpaper === wallpaper ? 'btn2-selected' : 'btn2'}`}
                         onClick={() => setWallpaper(wallpaper)}
                     >
                         <Image 

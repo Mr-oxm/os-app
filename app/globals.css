@@ -37,9 +37,7 @@
     --card: 210 13% 97%;
     --card-foreground: 0 0% 0%;
     --popover: 210 13% 97%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 221 73% 50%;
-    --primary-foreground: 0 0% 100%;
+    --popover-foreground: 0 0% 0%; 
     --secondary: 214 32% 91%;
     --secondary-foreground: 0 0% 0%;
     --muted: 214 32% 91%;
@@ -49,8 +47,7 @@
     --destructive: 0 79% 63%;
     --destructive-foreground: 0 0% 100%;
     --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 221 73% 50%;
+    --input: 214 32% 91%; 
     --windowExit: 0 79% 63%;
     --windowMinimize: 45 89% 50%;
     --windowMaximize: 120 57% 40%;
@@ -65,9 +62,7 @@
     --card: 0 0% 10%;
     --card-foreground: 0 0% 100%;
     --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 210 100% 50%;
-    --primary-foreground: 0 0% 100%;
+    --popover-foreground: 0 0% 100%; 
     --secondary: 217 19% 35%;
     --secondary-foreground: 0 0% 100%;
     --muted: 217 19% 35%;
@@ -77,13 +72,41 @@
     --destructive: 0 79% 50%;
     --destructive-foreground: 0 0% 100%;
     --border: 217 19% 35%;
-    --input: 217 19% 35%;
-    --ring: 210 100% 50%;
+    --input: 217 19% 35%; 
     --windowExit: 0 79% 50%;
     --windowMinimize: 45 89% 50%;
     --windowMaximize: 120 57% 40%;
     --windowForeground: 0 0% 100%;
   } 
+  .red-theme { 
+    --ring: 0 100% 50%;
+    --primary: 0 100% 50%;
+    --primary-foreground: 0 0% 100%; 
+  }
+
+  .blue-theme { 
+    --ring: 210 100% 50%;
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%; 
+  }
+
+  .green-theme { 
+    --ring: 120 100% 40%;
+    --primary: 120 100% 40%;
+    --primary-foreground: 0 0% 100%; 
+  }
+
+  .yellow-theme { 
+    --ring: 60 100% 50%;
+    --primary: 60 100% 50%;
+    --primary-foreground: 60 100% 10%; 
+  }
+
+  .purple-theme { 
+    --ring: 270 100% 50%;
+    --primary: 270 100% 50%;
+    --primary-foreground: 0 0% 100%; 
+  }
 }
 
 
@@ -104,7 +127,7 @@
       @apply !bg-background/20
     } 
     .card{
-    @apply !rounded-xl !border !border-border/20 !p-3 !text-foreground  !drop-shadow-lg
+      @apply !rounded-xl !border !border-border/20 !p-3 !text-foreground  !drop-shadow-lg
     }
     .btn{
       @apply !p-1 card bgOpacity hover:!bg-foreground/10 active:!bg-primary active:!text-primary-foreground bgblur
@@ -112,6 +135,15 @@
     .btn-normal{
       @apply card bgOpacity hover:!bg-foreground/10 active:!bg-primary active:!text-primary-foreground bgblur
     }
+
+    .btn2-selected{
+      @apply ring-2 ring-primary !border-transparent card bgOpacity cursor-pointer overflow-hidden 
+    }
+    .btn2{
+      @apply hover:!border-transparent hover:ring-2 hover:ring-primary/50 card bgOpacity cursor-pointer overflow-hidden active:ring-primary
+    }
+
+
 
   } 
 
@@ -150,3 +182,5 @@
     bottom: -20px;
     z-index: -1;
   }
+
+  

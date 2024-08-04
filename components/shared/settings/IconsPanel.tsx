@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import useAppStore from '@/lib/Store/useAppStore' 
-import { TaskbarIcons } from '@/lib/constants'
+import { SystemAppsIcons } from '@/lib/constants'
 import Image from 'next/image'
 
 const IconsPanel = () => {
@@ -28,11 +28,11 @@ const IconsPanel = () => {
                     <Button
                         key={t}
                         onClick={() => setIconsType(getImageIndex(t))}
-                        className={`card bgOpacity cursor-pointer h-20 overflow-hidden hover:ring-2  flex gap-2 ${iconsType === getImageIndex(t) ? 'ring-2 ring-primary' : ''}`}
+                        className={`h-20  flex gap-2 ${iconsType === getImageIndex(t) ? 'btn2-selected' : 'btn2'}`}
                     >
                         <Label className='w-20'>{t}</Label>
-                        <Image src={TaskbarIcons[0].imgSrc[getImageIndex(t)]} alt={t} width={50} height={50}/>
-                        <Image src={TaskbarIcons[1].imgSrc[getImageIndex(t)]} alt={t} width={50} height={50}/>
+                        <Image src={SystemAppsIcons[0].imgSrc[getImageIndex(t)]} alt={t} width={50} height={50}/>
+                        <Image src={SystemAppsIcons[1].imgSrc[getImageIndex(t)]} alt={t} width={50} height={50}/>
                     </Button>
                 ))}
             </div>

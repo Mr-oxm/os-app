@@ -20,7 +20,7 @@ import OXMTopbar from './topbar/OXMTopbar'
 import WidgetsDesktopBody from './desktopBody/WidgetsDesktopBody'
 
 const FullDesktop = ({ children }: { children: React.ReactNode }) => { 
-    const { mainbodyType, taskbarType, topbarType, wallpaper, firstboot, taskbarPos,taskbarDir, fontType} = useAppStore()
+    const { mainbodyType, taskbarType, topbarType, wallpaper, firstboot, taskbarPos,taskbarDir, fontType, sysColor} = useAppStore()
     const [isLoading, setIsLoading] = useState(true)
     const [isLocked, setIsLocked] = useState(true)
 
@@ -84,11 +84,11 @@ const FullDesktop = ({ children }: { children: React.ReactNode }) => {
     // )
     return (
         <main 
-            className={`!cursor-macos flex h-screen w-screen flex-col items-center justify-between max-h-screen max-w-screen overflow-hidden bg-cover bg-center ${fontType}`}
+            className={`!cursor-macos ${sysColor} flex h-screen w-screen flex-col items-center justify-between max-h-screen max-w-screen overflow-hidden bg-cover bg-center ${fontType}`}
             style={{ backgroundImage: `url('/wallpapers/${wallpaper}')` }}
         >
             {topBarComponents[topbarType]}
-            <div className={`flex relative ${taskbarDir==0? "flex-col":( taskbarDir==1? "flex-row":"flex-row-reverse")} flex-grow w-full items-center`}>
+            <div className={`flex relative ${taskbarDir==0? "flex-col":( taskbarDir==1? "flex-row":"flex-row-reverse")} {sysColor} flex-grow w-full items-center`}>
                 {DesktopComponents[mainbodyType]} 
                 {taskbarPosition[taskbarPos]}
             </div>

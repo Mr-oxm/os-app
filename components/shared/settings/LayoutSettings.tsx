@@ -14,7 +14,7 @@ const LayoutSettings: React.FC = () => {
                     <Button
                         key={option}
                         onClick={() => {setter(index);if(option==='OXM OS'&& title.includes('Taskbar')) setTaskbarPos(0);}}
-                        className={`card bgOpacity cursor-pointer h-20 overflow-hidden hover:ring-2 ${type === index ? 'ring-2 ring-primary' : ''}`}
+                        className={` h-20  ${type === index ? 'btn2-selected' : 'btn2'}`}
                         disabled={disabled}
                     >
                         <Label className='w-20'>{option}</Label>

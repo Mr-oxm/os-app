@@ -49,7 +49,7 @@ const MainDesktopBody = ({children}:any) => {
     const getImgSrc = (id: string): string|StaticImageData => {
         const folder = FoldersIcons.find(folder => id in folder);
         if (folder) {
-            return folder[id:][iconsType];
+            return folder[id][iconsType];
         }
         return '';
     };

@@ -1,13 +1,12 @@
 "use client"
-import React, { useState, useRef, KeyboardEvent, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const TerminalApp: React.FC = () => {
     const [history, setHistory] = useState<string[]>([]);
     const [currentLine, setCurrentLine] = useState<string>('$ ');
-    const [cursorPosition, setCursorPosition] = useState<number>(2);
     const terminalRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (terminalRef.current) {
@@ -22,7 +21,7 @@ const TerminalApp: React.FC = () => {
     }, []);
 
     const executeCommand = (command: string): string => {
-        const cmd = command.toLowerCase();
+        const cmd = command.toLowerCase().trim();
         switch (cmd) {
             case 'help':
                 return 'Available commands: help, echo, date, clear, whoami, pwd, ls, cat, neofetch';
@@ -74,100 +73,46 @@ const TerminalApp: React.FC = () => {
         return asciiArt + info;
     };
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-        if (e.ctrlKey) {
-            e.preventDefault();
-            switch (e.key) {
-                case 'c':
-                    setHistory(prev => [...prev, currentLine]);
-                    setCurrentLine('$ ');
-                    setCursorPosition(2);
-                    break;
-                case 'l':
-                    setHistory([]);
-                    break;
-                case 'a':
-                    setCursorPosition(2);
-                    break;
-                case 'e':
-                    setCursorPosition(currentLine.length);
-                    break; 
-            }
-            return;
-        }
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCurrentLine('$ ' + e.target.value);
+    };
 
-        switch (e.key) {
-            case 'Enter':
-                const command = currentLine.slice(2).trim();
-                if (command) {
-                    setHistory(prev => [...prev, currentLine]);
-                    const output = executeCommand(command);
-                    if (output) {
-                        setHistory(prev => [...prev, output]);
-                    }
-                    setCurrentLine('$ ');
-                    setCursorPosition(2);
-                }
-                break;
-            case 'Backspace':
-                if (cursorPosition > 2) {
-                    setCurrentLine(prev => prev.slice(0, cursorPosition - 1) + prev.slice(cursorPosition));
-                    setCursorPosition(prev => prev - 1);
-                }
-                break;
-            case 'Delete':
-                if (cursorPosition < currentLine.length) {
-                    setCurrentLine(prev => prev.slice(0, cursorPosition) + prev.slice(cursorPosition + 1));
-                }
-                break;
-            case 'ArrowLeft':
-                if (cursorPosition > 2) {
-                    setCursorPosition(prev => prev - 1);
-                }
-                break;
-            case 'ArrowRight':
-                if (cursorPosition < currentLine.length) {
-                    setCursorPosition(prev => prev + 1);
-                }
-                break;
-            case 'Home':
-                setCursorPosition(2);
-                break;
-            case 'End':
-                setCursorPosition(currentLine.length);
-                break;
-            default:
-                if (e.key.length === 1) {
-                    setCurrentLine(prev => prev.slice(0, cursorPosition) + e.key + prev.slice(cursorPosition));
-                    setCursorPosition(prev => prev + 1);
-                }
+    const handleInputSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const command = currentLine.slice(2).trim();
+        if (command) {
+            setHistory(prev => [...prev, currentLine]);
+            const output = executeCommand(command);
+            if (output) {
+                setHistory(prev => [...prev, output]);
+            }
+            setCurrentLine('$ ');
         }
     };
 
-    const refocusInput = () => {
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
+    const handleClearClick = () => {
+        setHistory([]);
     };
 
     return (
-        <div className="w-full h-full flex flex-col bg-background/50 text-green-500 font-mono text-sm" onClick={refocusInput}>
+        <div className="w-full h-full flex flex-col-reverse bg-background/70 text-green-500 font-mono text-sm">
             <ScrollArea className="flex-grow p-4" ref={terminalRef}>
                 {history.map((line, index) => (
-                    <div key={index} className="mb-1 whitespace-pre-wrap">{line}</div>
+                    <div key={index} className="mb-2 whitespace-pre-wrap">{line}</div>
                 ))}
-                <div
-                    ref={inputRef}
-                    className="focus:outline-none relative"
-                    tabIndex={0}
-                    onKeyDown={handleKeyDown}
-                >
-                    {currentLine.slice(0, cursorPosition)}
-                    <span className="absolute inline-block w-2 h-5 bg-green-500 animate-pulse"></span>
-                    {currentLine.slice(cursorPosition)}
-                </div>
             </ScrollArea>
+            <form onSubmit={handleInputSubmit} className="p-4 flex card bgOpacity bgblur m-2">
+                <span className='mr-1 text-green-500'>$</span><input
+                    ref={inputRef}
+                    type="text"
+                    value={currentLine.slice(2)}
+                    onChange={handleInputChange}
+                    className="flex-grow bg-transparent border-none focus:outline-none text-green-500"
+                />
+                
+            </form>
         </div>
     );
-}; 
-export default TerminalApp
+};
+
+export default TerminalApp;

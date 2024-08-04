@@ -12,6 +12,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import useAppStore from "@/lib/Store/useAppStore";
 
 const formatDate = (date:Date) => {
     const options:any = { 
@@ -27,7 +28,7 @@ const formatDate = (date:Date) => {
 
 const MacRightbar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
-
+    const { sysColor} = useAppStore()
     useEffect(() => {
         const intervalId = setInterval(() => {
             setCurrentDate(new Date());
@@ -47,13 +48,13 @@ const MacRightbar = () => {
     ];
 
     return (
-        <div className="flex flex-row-reverse h-full p-1 gap-1 ">
+        <div className={`flex flex-row-reverse h-full p-1 gap-1 !${sysColor}`}>
             {menuItems.map((item, index) => (
                 <DropdownMenu key={index}>
-                    <DropdownMenuTrigger className={`bg-transparent !py-0 !px-3 h-full !text-foreground !text-xs hover:bg-background/40 rounded-sm transition-all ease-in-out !border-transparent hover:!border-border/20 card ${item.className || ''}`}>
+                    <DropdownMenuTrigger className={` w-auto bg-transparent !py-0 !px-1 md:!px-3 h-full !text-foreground !text-xs hover:bg-background/40 rounded-sm transition-all ease-in-out !border-transparent hover:!border-border/20 card ${item.className || ''}`}>
                         {item.icon || item.label}
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="!p-2 w-auto md:w-80 text-foreground card bgOpacity bgblur hover:bgOpacity mt-2">
+                    <DropdownMenuContent className="!p-2 w-screen md:w-80 text-foreground card bgOpacity bgblur hover:bgOpacity mt-2">
                         {item.content}
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -70,8 +71,9 @@ const SettingsMenu = () => {
         {name:"Bluetooth", icon:<Bluetooth className="lucidBarIcon"/>, status:false},
         {name:"Airdrop", icon:<Share className="lucidBarIcon"/>, status:false},
     ]
+    const { sysColor} = useAppStore()
     return(
-        <div className="grid grid-cols-4 grid-rows-4 w-full !text-xs gap-2">
+        <div className={`grid grid-cols-4 grid-rows-4 w-full !text-xs gap-2 ${sysColor}`}>
             <div className="flex flex-col gap-4 bgOpacity card row-span-2 col-span-2 ">
                 {settingsIcon.map((icon, index) => (
                     <div key={index} className="flex flex-row gap-2 items-center">

@@ -178,7 +178,13 @@ const MainWindow = ({
     return (
         <div
             id={`window-${programId}`}
-            className={`card ${windowType == 1 ? "!rounded-none" : ""} ${minimized ? "hidden" : "flex"} flex-col !p-0 bgblur overflow-hidden bgOpacity absolute ${isMaximized ? 'w-full h-full' : ''} ${(active === programId)? "z-20":"z-10"} p-4 ${isDragging || isResizing ? "" : "transition-all duration-200"} ease-in-out`}
+            className={`
+                card ${windowType == 1 ? "!rounded-none" : ""} 
+                ${minimized ? "hidden" : "flex"} 
+                flex-col !p-0 bgblur overflow-hidden bgOpacity absolute 
+                ${isMaximized ? 'w-full h-full' : ''} 
+                ${(active === programId)? "z-20":"z-10"} p-4 ${isDragging || isResizing ? "" : "transition-all duration-200"} 
+                ease-in-out`}
             style={{ top: position.top, left: position.left, width: size.width, height: size.height }}
         > 
             <div 
@@ -218,16 +224,16 @@ const MainWindow = ({
 
 const MacButtons = ({ handleExit, handleMaximize, handleMinimize, windowDir, windowType, handleSplit }:ButtonProps) => (
     <div className={`flex ${windowDir==0?"flex-row": "flex-row-reverse"} gap-2 space-x-2 text-window-foreground w-1/4 items-center`}>
-        <button onClick={handleExit} className="w-3 h-3 bg-window-exit rounded-full group overflow-hidden">
+        <button onClick={handleExit} className="md:w-3 md:h-3 h-5 w-5 bg-window-exit rounded-full group overflow-hidden">
             <X className='w-full h-full hidden group-hover:block'/>
         </button>
-        <button onClick={handleMinimize} className="w-3 h-3 bg-window-mini rounded-full group overflow-hidden !m-0">
+        <button onClick={handleMinimize} className="md:w-3 md:h-3 h-5 w-5 bg-window-mini rounded-full group overflow-hidden !m-0">
             <Minus className='w-full h-full hidden group-hover:block'/>
         </button>
         <TooltipProvider>
             <Tooltip>
-                <TooltipTrigger className='!m-0'>
-                    <button onClick={handleMaximize} className="w-3 h-3 bg-window-max rounded-full group overflow-hidden !m-0">
+                <TooltipTrigger className='!m-0 hidden md:block'>
+                    <button onClick={handleMaximize} className="md:w-3 md:h-3 h-5 w-5 bg-window-max rounded-full group overflow-hidden !m-0">
                         <Maximize2 className='w-full h-full hidden group-hover:block'/>
                     </button>
                 </TooltipTrigger>
@@ -239,7 +245,7 @@ const MacButtons = ({ handleExit, handleMaximize, handleMinimize, windowDir, win
 
 const WindowsButtons = ({ handleExit, handleMaximize, handleMinimize, windowDir, windowType, handleSplit }:ButtonProps) => (
     <div className={`flex ${windowDir==0?"flex-row": "flex-row-reverse"} gap-2 !text-foreground w-1/4 items-center`}>
-        <Button onClick={handleExit} className={`p-1 w-6 h-6 bg-transparent hover:!bg-window-exit rounded-md overflow-hidden !text-foreground !m-0 ${windowType==2&&"bg-window-exit rounded-full"} ${windowType==3&&"hover:!text-window-foreground hover:bg-window-exit rounded-full"}`}>
+        <Button onClick={handleExit} className={`p-1 md:w-6 md:h-6 h-8 w-8 bg-transparent hover:!bg-window-exit rounded-md overflow-hidden !text-foreground !m-0 ${windowType==2&&"bg-window-exit rounded-full"} ${windowType==3&&"hover:!text-window-foreground hover:bg-window-exit rounded-full"}`}>
             {windowType===3? 
                 <ImCross />
                 :
@@ -249,8 +255,8 @@ const WindowsButtons = ({ handleExit, handleMaximize, handleMinimize, windowDir,
         
         <TooltipProvider>
             <Tooltip>
-                <TooltipTrigger className='!m-0'>
-                <Button onClick={handleMaximize} className={`p-1 w-6 h-6 bg-transparent rounded-md hover:bg-foreground/15 overflow-hidden !m-0 ${windowType==2&&"bg-foreground/15 rounded-full"} ${windowType==3&&"hover:!text-window-foreground hover:bg-window-max rounded-full"}`}>
+                <TooltipTrigger className='!m-0 hidden md:block'>
+                <Button onClick={handleMaximize} className={`p-1 md:w-6 md:h-6 h-8 w-8 bg-transparent rounded-md hover:bg-foreground/15 overflow-hidden !m-0 ${windowType==2&&"bg-foreground/15 rounded-full"} ${windowType==3&&"hover:!text-window-foreground hover:bg-window-max rounded-full"}`}>
                     {windowType===3? 
                         <FaMaximize />
                         :
@@ -262,7 +268,7 @@ const WindowsButtons = ({ handleExit, handleMaximize, handleMinimize, windowDir,
                 <WindowSplit handleSplit={handleSplit} windowDir={windowDir}/>
             </Tooltip>
         </TooltipProvider> 
-        <Button onClick={handleMinimize} className={`p-1 w-6 h-6 bg-transparent hover:!bg-foreground/15 rounded-md overflow-hidden !m-0 ${windowType==2&&"bg-foreground/15 rounded-full"} ${windowType==3&&"hover:!text-window-foreground hover:!bg-window-mini rounded-full"}`}>
+        <Button onClick={handleMinimize} className={`p-1 md:w-6 md:h-6 h-8 w-8 bg-transparent hover:!bg-foreground/15 rounded-md overflow-hidden !m-0 ${windowType==2&&"bg-foreground/15 rounded-full"} ${windowType==3&&"hover:!text-window-foreground hover:!bg-window-mini rounded-full"}`}>
             {windowType===3? 
                 <ImMinus />
                 : 

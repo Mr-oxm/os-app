@@ -5,7 +5,8 @@ import useAppStore from '@/lib/Store/useAppStore'
 import { TaskbarIcons } from '@/lib/constants'
 import Image from 'next/image'
 import Apple from '@/components/icons/apple'
-import { ScrollArea } from '@/components/ui/scroll-area' import OXMIcon1 from '@/components/icons/OXMIcon1'
+import { ScrollArea } from '@/components/ui/scroll-area' 
+import OXMIcon1 from '@/components/icons/OXMIcon1'
 
 const BootingSettings = () => {
     const { bootAnimation, setBootAnimation } = useAppStore();

@@ -1,18 +1,16 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar"; 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
 import { SystemAppsIcons } from "@/lib/constants";
 import useAppStore from "@/lib/Store/useAppStore";
 import useOSMemoryStore from "@/lib/Store/useOSMemoryStore";
-import { Label } from "@radix-ui/react-context-menu";
-import { Battery, Volume2, Wifi } from "lucide-react";
+import { Label } from "@radix-ui/react-context-menu"; 
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { MdOutlineSignalWifi4Bar,MdOutlinePowerSettingsNew, MdOutlineRestartAlt, MdBluetooth, MdMonitor } from "react-icons/md";
-import { FaVolumeUp, FaSearch } from "react-icons/fa";
+import { FaVolumeUp } from "react-icons/fa";
 import { RiBatteryFill, RiBatteryLine } from "react-icons/ri";
 import { IoIosApps, IoMdMoon } from "react-icons/io";
 import { Input } from "@/components/ui/input";
@@ -33,7 +31,7 @@ const formatDate = (date:Date) => {
 };
 
 const OXMTopbar = () => { 
-    const { openProgram, openedPrograms, minimizeProgram, maximizeProgram, active } = useOSMemoryStore();
+    const {sysColor } = useAppStore() 
     const [currentDate, setCurrentDate] = useState(new Date()); 
 
     useEffect(() => {
@@ -49,7 +47,7 @@ const OXMTopbar = () => {
     const formattedDate = formatDate(currentDate);
 
     return (
-        <div className={` bg-background/80 backdrop-blur-md flex flex-row justify-between h-6 px-4 py-1 z-50 rounded-full w-full my-1`}> 
+        <div className={`  bg-background/80 backdrop-blur-md flex flex-row justify-between h-6 px-4 py-1 z-50 rounded-full w-full my-1`}> 
                 <div className={`flex justify-start w-1/5 flex-row text-xs font-bold`}>
                 <Popover>
                     <PopoverTrigger className="capitalize p-1 border-transparent group border hover:border-border/50 hover:bg-foreground/10 flex flex-row h-full gap-2 items-center rounded-md">
@@ -69,7 +67,7 @@ const OXMTopbar = () => {
                             <Calendar
                                 mode="single"
                                 selected={currentDate}
-                                className="card bgOpacity"
+                                className={`card bgOpacity ${sysColor}`}
                             />
                         </PopoverContent>
                     </Popover>
@@ -110,12 +108,13 @@ const quickSettings = [
 ];
 
 function SystemTrayMenu() {
+    const { sysColor } = useAppStore();
     return (
-    <PopoverContent className="w-80 card bgOpacity backdrop-blur-md mt-1 overflow-hidden flex flex-col gap-3 mr-4">
+    <PopoverContent className={`w-80 card bgOpacity backdrop-blur-md mt-1 overflow-hidden flex flex-col gap-3 mr-4 ${sysColor}`}>
         <div className="grid grid-cols-3 gap-2 card bgOpacity">
             {quickSettings.map(({ icon: Icon, label }) => (
             <div className="flex flex-col items-center gap-2">
-                <Button key={label} variant="ghost" className="card bgOpacity cursor-pointer h-20 overflow-hidden hover:ring-2 w-full flex flex-col gap-2 group active:ring-2 active:ring-primary !drop-shadow-none">
+                <Button key={label} variant="ghost" className=" h-20 overflow-hidden w-full flex flex-col gap-2 group btn2 !drop-shadow-none">
                     <Icon className="h-4 w-4" />
                     <span className="text-xs text-wrap opacity-0 h-0 group-hover:h-6 group-hover:opacity-100 transition-all ease-in-out">{label}</span>
                 </Button>
@@ -141,7 +140,7 @@ function SystemTrayMenu() {
 
 
 const OXMenu=()=>{
-    const { iconsType } = useAppStore();
+    const { iconsType, sysColor } = useAppStore();
     const {openedPrograms, minimizeProgram, maximizeProgram, active } = useOSMemoryStore();
     const {openProgram}= useTaskbarStore();
     const [searchTerm, setSearchTerm] = useState('');
@@ -160,14 +159,14 @@ const OXMenu=()=>{
     );
 
     return (
-        <PopoverContent className="card bgblur bgOpacity ml-4 mt-1 grid md:grid-cols-6 grid-cols-8 gap-2 w-80 md:w-96 ">
+        <PopoverContent className={`${sysColor} card bgblur bgOpacity ml-4 mt-1 grid md:grid-cols-6 grid-cols-8 gap-2 w-80 md:w-96 `}>
             {/* left section  */}
             <div className="flex flex-col justify-between gap-2 md:col-span-5 col-span-6 bgOpacity card">
                 <Label className=" font-bold text-sm">All apps</Label>
                 <ScrollArea className="max-h-72">
                     <div className="!flex !flex-col gap-1 items-center justify-start min-h-64">
                         {filteredIcons.map((icon, index) => ( 
-                            <Button key={index} onClick={() => handleProgram(icon.id)} variant="ghost" className={`!p-1.5 flex flex-row gap-3 card  w-full h-10 group bgOpacity hover:!bg-foreground/10 ease-in-out justify-start  transition-all !drop-shadow-none ${
+                            <Button key={index} onClick={() => handleProgram(icon.id)} variant="ghost" className={`!p-1.5 flex flex-row gap-3  w-full h-10 group    justify-start btn-normal !drop-shadow-none ${
                                 openedPrograms.some(p => p.id === icon.id) ? '!bg-primary !text-primary-foreground hover:!bg-primary' : ''
                             }`}>
                                 <Image 
@@ -202,13 +201,13 @@ const OXMenu=()=>{
                     <Label className=" transition-all hidden ease-in-out group-hover:block">Guest</Label>
                 </div>
                 <div className="flex flex-col gap-2 justify-end">
-                    <Button className="!rounded-full w-10 h-10 !p-1 card bgOpacity hover:!bg-foreground/10">
+                    <Button className="!rounded-full w-10 h-10 btn">
                         <MdOutlinePowerSettingsNew />
                     </Button>
-                    <Button className="!rounded-full w-10 h-10 !p-1 card bgOpacity hover:!bg-foreground/10"> 
+                    <Button className="!rounded-full w-10 h-10 btn"> 
                         <MdOutlineRestartAlt />
                     </Button>
-                    <Button className="!rounded-full w-10 h-10 !p-1 card bgOpacity hover:!bg-foreground/10">
+                    <Button className="!rounded-full w-10 h-10 btn">
                         <IoLogOutOutline />
                     </Button>
                 </div>

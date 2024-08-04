@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import {
     ContextMenu,
     ContextMenuContent,
@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/context-menu" 
 import { useTaskbarStore } from '@/lib/Store/useTaskbarStore';
 import useOSMemoryStore from '@/lib/Store/useOSMemoryStore';
+import useAppStore from '@/lib/Store/useAppStore';
 
 interface TaskbarContextMenuProps {
     children: React.ReactNode;
@@ -18,7 +19,8 @@ interface TaskbarContextMenuProps {
 
 const TaskbarContextMenu: React.FC<TaskbarContextMenuProps> = ({ children, appId, className, onMouseLeave, onMouseEnter }) => {
     const { appIds, addApp, removeApp, openProgram,closeProgram } = useTaskbarStore();
-    const { openedPrograms, minimizeProgram, maximizeProgram, active } = useOSMemoryStore();
+    const { openedPrograms, minimizeProgram, maximizeProgram, active, setActive } = useOSMemoryStore();
+    const {taskbarDir, sysColor}= useAppStore();
     const isPinned = appIds.includes(appId);
     const isWorking= openedPrograms.some(program => program.id === appId);
 
@@ -29,10 +31,18 @@ const TaskbarContextMenu: React.FC<TaskbarContextMenuProps> = ({ children, appId
     const handleUnpin = () => {
         removeApp(appId);
     };
+
     const handleProgram = (id:any) => {
         const result = openedPrograms.find(program => program.id === id);
-        if (result) {
-            result.minimized ? maximizeProgram(id) : minimizeProgram(id);
+        if (result) { 
+            if(result.minimized){ 
+                setActive(id);
+                maximizeProgram(id);
+            }else if(active != id){
+                setActive(id);
+            }else{
+                minimizeProgram(id)
+            }
         } else {
             openProgram(id);
         }
@@ -40,10 +50,10 @@ const TaskbarContextMenu: React.FC<TaskbarContextMenuProps> = ({ children, appId
 
     return (
         <ContextMenu>
-        <ContextMenuTrigger onClick={()=>handleProgram(appId)} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className={className}>
+        <ContextMenuTrigger onClick={()=>handleProgram(appId)} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className={`${className} `}>
             {children} 
         </ContextMenuTrigger>
-        <ContextMenuContent className='card bgOpacity bgblur mb-14 text-xs -translate-x-20'>
+        <ContextMenuContent className={`${sysColor} card bgOpacity bgblur !p-2  text-xs ${taskbarDir==0? '-translate-x-20 mb-14':(taskbarDir==1? '-translate-x-8 -translate-y-10':'translate-x-8 -translate-y-10')}`}>
             {(appId!=='launchpad')&&(isPinned ? (
                 <ContextMenuItem className='hover:!bg-foreground/15 active:!bg-primary active:!text-primary-foreground text-xs card !p-2 !border-transparent' onClick={handleUnpin}>Unpin from Taskbar</ContextMenuItem>
                 ) : (

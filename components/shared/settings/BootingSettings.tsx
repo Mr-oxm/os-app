@@ -2,10 +2,8 @@
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import useAppStore from '@/lib/Store/useAppStore' 
-import { TaskbarIcons } from '@/lib/constants'
 import Image from 'next/image'
-import Apple from '@/components/icons/apple'
-import { ScrollArea } from '@/components/ui/scroll-area' 
+import Apple from '@/components/icons/apple' 
 import OXMIcon1 from '@/components/icons/OXMIcon1'
 
 const BootingSettings = () => {
@@ -89,7 +87,7 @@ const BootingSettings = () => {
                     <Button
                         key={t}
                         onClick={() => setBootAnimation(getImageIndex(t))}
-                        className={`card bgOpacity cursor-pointer h-20 overflow-hidden hover:ring-2 ${bootAnimation === getImageIndex(t) ? 'ring-2 ring-primary' : ''}`}
+                        className={`h-20  ${bootAnimation === getImageIndex(t) ? 'btn2-selected' : 'btn2'}`}
                     >
                         <Label className='w-20'>{t}</Label>
                         {logoComponents[getImageIndex(t)]}

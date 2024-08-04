@@ -214,20 +214,23 @@ const FinderApp: React.FC = () => {
     // Render functions
     const renderToolbar = () => (
         <div className='flex flex-col items-center card !rounded-t-none bgOpacity gap-1 !p-2'>
+            {/* topbar  */}
             <div className="flex items-center w-full">
-                <div className='flex flex-row gap-2 w-1/4 justify-start'>
-                    <Button variant="ghost" size="icon" className='btn !rounded-full' onClick={() => setSidebarVisible(!sidebarVisible)}>
+                {/* left section  */}
+                <div className='flex flex-row gap-2 w-1/2 md:w-1/4 justify-start'>
+                    <Button variant="ghost" size="icon" className='btn !rounded-full w-8 h-8' onClick={() => setSidebarVisible(!sidebarVisible)}>
                         <AiOutlineMenu className="lucidBarIcon" />
                     </Button>
-                    <Button variant="ghost" size="icon" className='btn !rounded-full'>
+                    <Button variant="ghost" size="icon" className='btn !rounded-full w-8 h-8'>
                         <IoMdArrowBack className="lucidBarIcon" />
                     </Button>
-                    <Button variant="ghost" size="icon" className='btn !rounded-full'>
+                    <Button variant="ghost" size="icon" className='btn !rounded-full w-8 h-8'>
                         <IoMdArrowForward className="lucidBarIcon" />
                     </Button>
                 </div>
 
-                <div className='flex flex-row gap-2 flex-grow justify-center items-center !drop-shadow-none !shadow-none'>
+                {/* center section  */}
+                <div className=' flex-row gap-2 flex-grow justify-center items-center !drop-shadow-none !shadow-none hidden md:flex '>
                     <Input
                         className="flex-grow card !drop-shadow-none !shadow-none"
                         placeholder="Search"
@@ -239,24 +242,22 @@ const FinderApp: React.FC = () => {
                     </Button> 
                 </div>
 
-                <div className='flex flex-row gap-2 w-1/4 justify-end'>
-                    <Button variant="ghost" size="icon" className='btn !rounded-full' onClick={handleCreateNewFolder}>
+                {/* right section  */}
+                <div className='flex flex-row gap-2 w-1/2 md:w-1/4 justify-end'>
+                    <Button variant="ghost" size="icon" className='btn !rounded-full w-8 h-8' onClick={handleCreateNewFolder}>
                         <MdCreateNewFolder className="lucidBarIcon" />
                     </Button>
+
                     <Input
                         type="file"
                         onChange={handleFileUpload}
                         className="hidden"
                         id="file-upload"
-                    />
-                    <label htmlFor="file-upload" className="cursor-pointer">
-                        <Button variant="ghost" size="icon" className='btn !rounded-full'>
-                            <FaUpload className="lucidBarIcon" />
-                        </Button>
-                    </label>
+                    /> 
+
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className='btn !rounded-full'>
+                            <Button variant="ghost" size="icon" className='btn !rounded-full w-8 h-8'>
                                 <FaSort className="lucidBarIcon" />
                             </Button>
                         </DropdownMenuTrigger>
@@ -268,18 +269,35 @@ const FinderApp: React.FC = () => {
                     </DropdownMenu>
                     <Button
                         variant="ghost"
-                        size="icon" className='btn !rounded-full'
+                        size="icon" className='btn !rounded-full w-8 h-8'
                         onClick={() => setViewMode('grid')}
                     >
                         <BsGrid3X3Gap className={`lucidBarIcon ${viewMode === 'grid' ? 'text-primary' : ''}`} />
                     </Button>
+
                     <Button
                         variant="ghost"
-                        size="icon" className='btn !rounded-full'
+                        size="icon" className='btn !rounded-full w-8 h-8'
                         onClick={() => setViewMode('list')}
                     >
                         <BsListUl className={`lucidBarIcon ${viewMode === 'list' ? 'text-primary' : ''}`} />
                     </Button>
+
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className='btn !rounded-full w-8 h-8'>
+                                <IoMdSearch className="lucidBarIcon" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className='card bgOpacity bgblur'>
+                            <Input
+                            className="flex-grow card !drop-shadow-none !shadow-none"
+                            placeholder="Search"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </div>
             <BreadcrumbNav path={currentPath}/>

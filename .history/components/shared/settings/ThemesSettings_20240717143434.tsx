@@ -22,7 +22,7 @@ const ThemesSettings = () => {
     )}
     return (
         <div className="h-full">
-            <h2 className="text-xl font-bold mb-4 p-">Choose Theme</h2>
+            <h2 className="text-xl font-bold mb-4 p-1">Choose Theme</h2>
             <div className="flex flex-col md:flex-row flex-wrap gap-2 p-1 "> 
                 <ThemeButton themeName="light"/> 
                 <ThemeButton themeName="dark"/> 

@@ -1,13 +1,16 @@
 "use client"
 import { Button } from "@/components/ui/button" 
+import { Label } from "@/components/ui/label"
 import useAppStore from "@/lib/Store/useAppStore" 
 import { useTheme } from "next-themes"
 const ThemesSettings = () => {
     const { theme,setTheme } = useTheme() 
-    const { sysTheme, setSysTheme } = useAppStore() 
+    const { sysTheme, setSysTheme, sysColor, setSysColor } = useAppStore() 
+
+    const options= ['blue-theme', 'red-theme','green-theme','yellow-theme','purple-theme']
 
     const ThemeButton=({themeName}:{themeName:string})=>{return(
-        <Button className={`overflow-hidden text-xs !p-0 card bgOpacity w-full md:w-2/5 h-fit cursor-pointer flex flex-col justify-start ${themeName} text-foreground hover:ring-2 ${sysTheme===themeName? 'ring-2 ring-primary': ''}`} onClick={() => {setTheme(themeName); setSysTheme(themeName);}}>
+        <Button className={`text-xs !p-0 w-full md:w-2/5 h-fit flex flex-col justify-start ${themeName} text-foreground ${sysTheme===themeName? 'btn2-selected' : 'btn2'}`} onClick={() => {setTheme(themeName); setSysTheme(themeName);}}>
             <div className="bg-background p-2 capitalize w-full">
                 {themeName}
             </div>
@@ -21,16 +24,30 @@ const ThemesSettings = () => {
         </Button>
     )}
     return (
-        <div className="h-full">
-            <h2 className="text-xl font-bold mb-4 p-1">Choose Theme</h2>
-            <div className="flex flex-col md:flex-row flex-wrap gap-2 p-1 "> 
-                <ThemeButton themeName="light"/> 
-                <ThemeButton themeName="dark"/> 
-                {/* {systemThemes.map(theme=>(
-                    <ThemeButton themeName={theme}/> 
-                ))} */}
+        <>
+            <div className="h-full">
+                <h2 className="text-xl font-bold mb-4 p-1">Choose Theme</h2>
+                <div className="flex flex-col md:flex-row flex-wrap gap-2 p-1 "> 
+                    <ThemeButton themeName="light"/> 
+                    <ThemeButton themeName="dark"/> 
+                    {/* {systemThemes.map(theme=>(
+                        <ThemeButton themeName={theme}/> 
+                    ))} */}
+                </div>
             </div>
-        </div>
+            <h2 className="text-xl font-bold my-4 ">Choose Color</h2>
+            <div className="flex flex-row gap-3 flex-wrap p-1">
+                {options.map((option, index) => (
+                    <Button
+                        key={option}
+                        onClick={() => {setSysColor(option)}}
+                        className={` h-20 ${sysColor === option ? 'btn2-selected' : 'btn2'}`} 
+                    >
+                        <Label className='w-20 capitalize'>{option.split('-')[0]}</Label>
+                    </Button>
+                ))}
+            </div>
+        </>
     )
 }
 

@@ -6,7 +6,7 @@ import useAppStore from '@/lib/Store/useAppStore'
 const FontSettings = () => {
     const {fontType, setFontType } = useAppStore();
 
-    const themes = ['font-sans', 'font-serif',"font-mono","font-style-script",""] 
+    const themes = ['font-sans', 'font-serif',"font-mono","font-style-script","font-six-caps"] 
 
     return (
         <div className="flex flex-col w-full max-h-full">

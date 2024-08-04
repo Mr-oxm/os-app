@@ -13,17 +13,25 @@ import {
 } from "@/components/ui/navigation-menu"
 import Apple from '@/components/icons/apple'
 
-import {NavbarLinks}from "@/lib/constants"
-import { usePathname } from "next/navigation";
+import {NavbarLinks}from "@/lib/constants" 
 import Image from "next/image";
 import useAppStore from "@/lib/Store/useAppStore";
 import OXMIcon2 from "@/components/icons/OXMIcon2";
+import useOSMemoryStore from "@/lib/Store/useOSMemoryStore";
 
 
-const macNavbar = () => {
-    const pathname = usePathname();
-    const programTitle = pathname?.split('/').pop() || '';
+const macNavbar = () => { 
     const { iconsType } = useAppStore();
+    const {active, openedPrograms}= useOSMemoryStore();
+
+    const handleTitle= ()=>{
+        const result = openedPrograms.find(program => program.id === active);
+        if (result) {
+            return result.name;
+        } else {
+            return 'Home';
+        }
+    }
     const macButtonIcons=[
         <span className="w-5 ">
             <Apple/>
@@ -53,9 +61,14 @@ const macNavbar = () => {
                     {NavbarLinks.map((menu, i) => (
                         <NavigationMenuItem key={i}>
                             <NavigationMenuTrigger className={`capitalize bg-transparent py-0 px-4 h-full !text-foreground !text-xs hover:bg-background/40 ${menu.classname}`}>
-                                {menu.Name==='Finder'? (programTitle? programTitle:menu.Name): (menu.Name==='icon'? macButtonIcons[iconsType]:menu.Name)}
+                                {
+                                    menu.Name==='Finder'? 
+                                    (handleTitle())
+                                    : 
+                                    (menu.Name==='icon'? macButtonIcons[iconsType]:menu.Name)
+                                }
                             </NavigationMenuTrigger>
-                            <NavigationMenuContent className="flex flex-col p-2  sm:w-auto md:w-[30rem]  text-foreground">
+                            <NavigationMenuContent className="flex flex-col p-2  w-screen md:w-[30rem]  text-foreground">
                                 {menu.content.map((item, index) => (
                                     item.name !== 'separator' ?
                                         <NavigationMenuLink key={index}>

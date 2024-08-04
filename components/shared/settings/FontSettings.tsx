@@ -16,7 +16,7 @@ const FontSettings = () => {
                     <Button
                         key={t}
                         onClick={() => setFontType(t)}
-                        className={`card bgOpacity cursor-pointer h-20 overflow-hidden hover:ring-2 ${t} ${fontType === t ? 'ring-2 ring-primary ' : ''}`}
+                        className={` h-20  ${t} ${fontType === t ? 'btn2-selected' : 'btn2'}`}
                     >
                         <Label className='w-20'>{t}</Label> 
                     </Button>

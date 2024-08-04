@@ -82,12 +82,12 @@ export default function Windows11Taskbar() {
                             {windowsButtonIcons[iconsType]}
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-fit p-4 rounded-lg  bg-background/80 backdrop-blur-md mb-3" side="top">
-                        <div className="flex flex-col h-96 gap-4 w-auto">
+                    <PopoverContent className="w-screen md:w-fit p-4 rounded-lg  bg-background/80 backdrop-blur-md mb-3" side="top">
+                        <div className="flex flex-col h-fit md:h-96 gap-4 w-auto">
                             <div className="col-span-3 w-full">
                                 <Input placeholder="Type here to search" className="mb-4 rounded-full w-full" />
                                 <h3 className="mb-2 font-semibold">Pinned</h3>
-                                <div className="grid grid-cols-6 gap-2  w-full">
+                                <div className="grid grid-cols-3 md:grid-cols-6 gap-2  w-full">
                                     {SystemAppsIcons.map((icon, index) => (
                                         <div key={index} className=" h-20">
                                             <Button 
@@ -157,7 +157,7 @@ export default function Windows11Taskbar() {
                             <BellRing className="w-4 h-4" />
                         </div>
                     </PopoverTrigger>
-                    <PopoverContent className="w-fit bg-background/80 backdrop-blur-md mb-3">
+                    <PopoverContent className="w-fit bg-background/80 backdrop-blur-md mb-3 mr-2">
                         <Calendar
                             mode="single"
                             selected={date}
@@ -188,7 +188,7 @@ const sliders = [
 
 function SystemTrayMenu() {
     return (
-    <PopoverContent className="w-80 p-0 bg-background/80 backdrop-blur-md mb-3 overflow-hidden">
+    <PopoverContent className="w-80 p-0 bg-background/80 backdrop-blur-md mb-3 overflow-hidden mr-2">
         <div className="grid grid-cols-3 gap-2 p-4">
             {quickSettings.map(({ icon: Icon, label }) => (
             <div className="flex flex-col items-center gap-2">

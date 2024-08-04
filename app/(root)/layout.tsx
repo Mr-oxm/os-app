@@ -28,10 +28,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-          <ContextMenu>
-            <ContextMenuTrigger><FullDesktop children={children}/></ContextMenuTrigger> 
+          <FullDesktop children={children}/>
+          {/* <ContextMenu>
+            <ContextMenuTrigger></ContextMenuTrigger> 
             <MenuContent/>
-          </ContextMenu>
+          </ContextMenu> */}
       </ThemeProvider>
       </body>
     </html>

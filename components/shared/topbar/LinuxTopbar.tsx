@@ -26,7 +26,7 @@ const formatDate = (date:Date) => {
 };
 
 const LinuxTopbar = () => {
-    const { iconsType, taskbarDir, taskbarPos } = useAppStore();
+    const { iconsType, taskbarDir, taskbarPos, sysColor } = useAppStore();
     const { openedPrograms, minimizeProgram, maximizeProgram, active } = useOSMemoryStore();
     const {openProgram}= useTaskbarStore();
     const [currentDate, setCurrentDate] = useState(new Date()); 
@@ -50,7 +50,7 @@ const LinuxTopbar = () => {
 
     const formattedDate = currentDate ? formatDate(currentDate) : '';
     return (
-        <div className={`bg-background/80 backdrop-blur-md flex flex-row justify-between h-6 px-4 w-screen py-1 z-50 `}> 
+        <div className={`bg-background/80 backdrop-blur-md flex flex-row justify-between h-6 px-4 w-screen py-1 z-50 ${sysColor}`}> 
                 <div className={`flex justify-start w-1/5 flex-row text-xs font-bold`}>
                 <Dialog>
                     <DialogTrigger className="capitalize p-1.5 border-transparent group border hover:border-accent/25 hover:bg-accent/40 flex flex-row h-full gap-2 items-center rounded-md">
@@ -89,7 +89,7 @@ const LinuxTopbar = () => {
                             <Calendar
                                 mode="single"
                                 selected={currentDate}
-                                className="card"
+                                className={`card ${sysColor}`}
                             />
                         </PopoverContent>
                     </Popover>

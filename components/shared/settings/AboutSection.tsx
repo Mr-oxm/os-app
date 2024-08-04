@@ -9,7 +9,7 @@ import { FaLinkedin, FaGithub } from 'react-icons/fa'
 const AboutSection = () => {
     return (
         <div className="flex flex-col gap-4 ">
-            <Card className="bg-card card ">
+            <Card className="bg-card card !p-2 ">
                 <CardContent className="pt-6">
                     <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
                         <Image 
@@ -41,7 +41,7 @@ const AboutSection = () => {
                 </CardContent>
             </Card>
 
-            <Card className="bg-card card">
+            <Card className="bg-card card !p-2">
                 <CardHeader>
                     <div className="flex justify-center mb-4">
                         <div className="w-32 h-32">

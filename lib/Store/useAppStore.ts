@@ -6,6 +6,7 @@ type Theme = 'light' | 'dark';
 interface AppState {
     firstboot: boolean;
     sysTheme: string;
+    sysColor:string;
     wallpaper: string;
     iconsType: number;
     topbarType: number;
@@ -21,6 +22,7 @@ interface AppState {
 
     setFirstboot: (value: boolean) => void;
     setSysTheme: (value: string) => void;
+    setSysColor: (value: string) => void;
     setWallpaper: (value: string) => void;
     setIconsType: (value: number) => void;
     setTopbarType: (value: number) => void;
@@ -40,6 +42,7 @@ const useAppStore = create<AppState>()(
         (set) => ({
             firstboot: true,
             sysTheme: 'dark',
+            sysColor:'blue-theme',
             wallpaper: 'os_1.png',
             iconsType: 3,
             topbarType: 3,
@@ -55,6 +58,7 @@ const useAppStore = create<AppState>()(
 
             setFirstboot: (value) => set({ firstboot: value }),
             setSysTheme: (value) => set({ sysTheme: value }),
+            setSysColor: (value) => set({ sysColor: value }),
             setWallpaper: (value) => set({ wallpaper: value }),
             setIconsType: (value) => set({ iconsType: value }),
             setTopbarType: (value) => set({ topbarType: value }),
