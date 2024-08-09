@@ -10,11 +10,11 @@ import { FaMaximize } from "react-icons/fa6";
 import { useTaskbarStore } from '@/lib/Store/useTaskbarStore';
 
 
-interface ButtonProps {
-    handleExit: () => void;
-    handleMaximize: () => void;
-    handleMinimize: () => void;
+interface ButtonProps { 
+    handleMinimize: () => void; 
+    handleMaximize: () => void; 
     handleSplit:(direction:string)=>void;
+    setIsClosing:any; 
     windowDir: number;
     windowType: number;
 }
@@ -22,14 +22,18 @@ interface ButtonProps {
 const MainWindow = ({
     children,
     programId,
-    minimized,
+    minimized, 
     name
 }: Readonly<{
     children: React.ReactNode;
     programId: string;
-    minimized: boolean;
+    minimized: boolean; 
     name:string;
 }>) => {
+    const [isClosing, setIsClosing] = useState(false);
+    const [isOpening, setIsOpening] = useState(true);
+    const [isMinimizing, setIsMinimizing] = useState(false);
+    const [isMaximizing, setIsMaximizing] = useState(false);
     const [isMaximized, setIsMaximized] = useState(true);
     const [position, setPosition] = useState<{ top: any, left: any }>({ top: 0, left: 0 });
     const [lastPosition, setLastPosition] = useState<{ top: any, left: any }>({ top: 0, left: 0 });
@@ -43,11 +47,13 @@ const MainWindow = ({
     const {closeProgram}= useTaskbarStore();
 
     const handleExit = () => {
+        setIsClosing(false);
         closeProgram(programId);
     };
 
-    const handleMinimize = () => {
+    const handleMinimize = () => { 
         minimizeProgram(programId);
+        setIsMinimizing(false);
     };
 
     const handleMaximize = useCallback(() => {
@@ -160,6 +166,11 @@ const MainWindow = ({
                 break;
         }
     }
+
+    useEffect(()=>{
+        setIsMaximizing(!minimized);
+        setIsMinimizing(minimized)
+    },[minimized])
     
     useEffect(() => {
         if (isDragging || isResizing) {
@@ -180,12 +191,31 @@ const MainWindow = ({
             id={`window-${programId}`}
             className={`
                 card ${windowType == 1 ? "!rounded-none" : ""} 
-                ${minimized ? "hidden" : "flex"} 
+                ${(minimized&&!isMinimizing) && "hidden"} 
+                ${(!minimized&&!isMaximizing) && 'flex'}
                 flex-col !p-0 bgblur overflow-hidden bgOpacity absolute 
-                ${isMaximized ? 'w-full h-full' : ''} 
+                ${isMaximized ? 'w-full h-full' : ''}
+                ${isClosing? "closing" : ""}
+                ${isOpening ? "opening" : ""}
+                ${isMinimizing? "closing" : ""}
+                ${isMaximizing?"opening":""}
                 ${(active === programId)? "z-20":"z-10"} p-4 ${isDragging || isResizing ? "" : "transition-all duration-200"} 
                 ease-in-out`}
             style={{ top: position.top, left: position.left, width: size.width, height: size.height }}
+            onAnimationEnd={() => {
+                if (isClosing) {
+                    handleExit();
+                }
+                if (isOpening) {
+                    setIsOpening(false);
+                }
+                if(isMinimizing){
+                    handleMinimize();
+                }
+                if(isMaximizing){
+                    setIsMaximizing(false)
+                }
+            }}
         > 
             <div 
                 className={`select-none flex ${windowDir == 0 ? "flex-row" : "flex-row-reverse"} justify-between p-2 h-8 bg-background items-center ${isMaximized ? 'cursor-default' : 'cursor-grab'}`} 
@@ -200,13 +230,13 @@ const MainWindow = ({
                 }}
                 onClick={() => setActive(programId)}
             >
-                <ButtonComponent
-                    handleExit={handleExit}
-                    handleMaximize={handleMaximize}
+                <ButtonComponent 
                     handleMinimize={handleMinimize}
+                    handleMaximize={handleMaximize} 
                     windowDir={windowDir}
                     windowType={windowType}
                     handleSplit={handleSplit}
+                    setIsClosing={setIsClosing}
                 />
                 <div className="flex-grow flex flex-row gap-2 justify-center items-center text-center text-foreground text-xs font-semibold capitalize">
                     {isMaximized&&<Lock width={12} height={12} />}
@@ -222,9 +252,9 @@ const MainWindow = ({
     );
 } 
 
-const MacButtons = ({ handleExit, handleMaximize, handleMinimize, windowDir, windowType, handleSplit }:ButtonProps) => (
+const MacButtons = ({ setIsClosing, handleMaximize, handleMinimize, windowDir, windowType, handleSplit }:ButtonProps) => (
     <div className={`flex ${windowDir==0?"flex-row": "flex-row-reverse"} gap-2 space-x-2 text-window-foreground w-1/4 items-center`}>
-        <button onClick={handleExit} className="md:w-3 md:h-3 h-5 w-5 bg-window-exit rounded-full group overflow-hidden">
+        <button onClick={()=>setIsClosing(true)} className="md:w-3 md:h-3 h-5 w-5 bg-window-exit rounded-full group overflow-hidden">
             <X className='w-full h-full hidden group-hover:block'/>
         </button>
         <button onClick={handleMinimize} className="md:w-3 md:h-3 h-5 w-5 bg-window-mini rounded-full group overflow-hidden !m-0">
@@ -243,9 +273,9 @@ const MacButtons = ({ handleExit, handleMaximize, handleMinimize, windowDir, win
     </div>
 );
 
-const WindowsButtons = ({ handleExit, handleMaximize, handleMinimize, windowDir, windowType, handleSplit }:ButtonProps) => (
+const WindowsButtons = ({ setIsClosing, handleMaximize, handleMinimize, windowDir, windowType, handleSplit }:ButtonProps) => (
     <div className={`flex ${windowDir==0?"flex-row": "flex-row-reverse"} gap-2 !text-foreground w-1/4 items-center`}>
-        <Button onClick={handleExit} className={`p-1 md:w-6 md:h-6 h-8 w-8 bg-transparent hover:!bg-window-exit rounded-md overflow-hidden !text-foreground !m-0 ${windowType==2&&"bg-window-exit rounded-full"} ${windowType==3&&"hover:!text-window-foreground hover:bg-window-exit rounded-full"}`}>
+        <Button onClick={()=>setIsClosing(true)} className={`p-1 md:w-6 md:h-6 h-8 w-8 bg-transparent hover:!bg-window-exit rounded-md overflow-hidden !text-foreground !m-0 ${windowType==2&&"bg-window-exit rounded-full"} ${windowType==3&&"hover:!text-window-foreground hover:bg-window-exit rounded-full"}`}>
             {windowType===3? 
                 <ImCross />
                 :

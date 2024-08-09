@@ -285,7 +285,7 @@ const FinderApp: React.FC = () => {
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className='btn !rounded-full w-8 h-8'>
+                            <Button variant="ghost" size="icon" className='btn !rounded-full w-8 h-8 md:hidden'>
                                 <IoMdSearch className="lucidBarIcon" />
                             </Button>
                         </DropdownMenuTrigger>

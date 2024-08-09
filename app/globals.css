@@ -183,4 +183,21 @@
     z-index: -1;
   }
 
-  
+  @keyframes openWindow {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes closeWindow {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.8); opacity: 0; }
+}
+
+.opening {
+    animation: openWindow 0.1s ease-out;
+}
+
+.closing {
+    animation: closeWindow 0.1s ease-in;
+    pointer-events: none;
+}
