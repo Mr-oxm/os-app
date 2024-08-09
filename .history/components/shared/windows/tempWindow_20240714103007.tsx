@@ -1,1 +1,0 @@
-components/shared/windows/macWindow.tsx
