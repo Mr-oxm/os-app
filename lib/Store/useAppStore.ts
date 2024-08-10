@@ -49,7 +49,7 @@ const useAppStore = create<AppState>()(
             taskbarType: 3,
             mainbodyType: 0,
             windowType: 3,
-            windowDir: 0,
+            windowDir: 1,
             taskbarDir:0,
             taskbarPos:0,
             fontType: 'font-sans',

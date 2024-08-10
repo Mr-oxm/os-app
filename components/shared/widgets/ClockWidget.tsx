@@ -27,7 +27,7 @@ const ClockWidget = () => {
     const { day, month, year, weekday } = formatDate(time);
 
     return (
-        <div className="select-none bg-transparent !border-transparent h-full !px-10 flex flex-col relative gap-2 md:gap-10 items-center justify-center card"> 
+        <div className="select-none bg-transparent !border-transparent h-full !px-6 md:!px-10 flex flex-col relative gap-2 md:gap-10 items-center justify-center card"> 
                 <Label className="block text-6xl md:text-9xl  text-foreground/50 font-six-caps tracking-wider" style={{ lineHeight: '1' }}>
                     {formatTime(time)}
                 </Label>
