@@ -10,9 +10,14 @@ import {
 } from "@/components/ui/context-menu"
 import { menuItems } from "@/lib/constants"; 
 import { ThemeProvider } from "@/components/ui/theme-provider"
-import FullDesktop from "@/components/shared/FullDesktop";
+import FullDesktop from "@/components/shared/FullDesktop"; 
 
 const inter = Inter({ subsets: ["latin"] }); 
+
+export const metadata: Metadata = {
+  title: 'OXM OS',
+  description: 'The most cuzstomizable Web OS', 
+};
 
 export default function RootLayout({
   children,
@@ -20,20 +25,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="font-sans">
+    <html lang="en" >
+      <head>
+        <link rel="icon" href="/icons/os_icon2.svg" sizes="any" />
+      </head>
       <body className={inter.className}>
-      <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-          <FullDesktop children={children}/>
-          {/* <ContextMenu>
-            <ContextMenuTrigger></ContextMenuTrigger> 
-            <MenuContent/>
-          </ContextMenu> */}
-      </ThemeProvider>
+        <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+            <FullDesktop children={children}/>
+            {/* <ContextMenu>
+              <ContextMenuTrigger></ContextMenuTrigger> 
+              <MenuContent/>
+            </ContextMenu> */}
+        </ThemeProvider>
       </body>
     </html>
   );
