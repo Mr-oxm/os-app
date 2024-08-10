@@ -2,7 +2,8 @@ import useAppStore from "@/lib/Store/useAppStore";
 import OXMDockIcon from "../desktopIcons/OXMDockIcon";
 import useOSMemoryStore from "@/lib/Store/useOSMemoryStore";
 import { useTaskbarStore } from "@/lib/Store/useTaskbarStore";
-import TaskbarContextMenu from "./TaskbarContextMenu";
+import TaskbarContextMenu from "./TaskbarContextMenu"; 
+import EchoIcon from "../desktopIcons/EchoIcon";
 
 const OXMTaskbar = () => {
     const { iconsType, taskbarDir } = useAppStore();
@@ -21,17 +22,17 @@ const OXMTaskbar = () => {
                 ? "w-14 md:w-2 h-fit hover:w-14 !px-0 !py-2 right-2"
                 : "left-2 w-14 md:w-2 h-fit hover:w-14 !px-0 !py-2"
         }`}>
-            <div className={`opacity-100 md:opacity-0 group-hover/show:opacity-100  flex transition-all  gap-2  ease-linear ${taskbarDir===0?"flex-row h-full group-hover/show:w-fit":"flex-col"}`}>
+            <div className={`opacity-100 md:opacity-0 group-hover/show:opacity-100  flex items-center transition-all  gap-2  ease-linear ${taskbarDir===0?"flex-row h-full group-hover/show:w-fit":"flex-col"}`}>
                 {TaskbarIcons.map((icon, index) => (
                     <TaskbarContextMenu appId={icon.id}
                         key={index}
-                        className={`transition-all group/button ease-in-out relative duration-200 mb-0  active:scale-150 delay-75 text-center ${taskbarDir===0?"hover:-translate-y-2 hover:scale-125":(taskbarDir===1?"hover:mr-3":"hover:ml-3")}
+                        className={`transition-all group/button ease-in-out relative duration-200 mb-0  active:scale-150 delay-75 text-center hover:scale-125
+                        }")}
                         }`}
                     >
-                        <OXMDockIcon imgSrc={icon.imgSrc[iconsType]} name={icon.name} />
-                        <span className={`${
-                            openedPrograms.some(p => p.id === icon.id) ? '' : 'hidden'}  absolute   transition-all w-1 h-1 bg-foreground  rounded-full ${taskbarDir===0 && "-bottom-0 button:-bottom-2"}
-                        }`}></span>
+                        <EchoIcon>
+                            <OXMDockIcon imgSrc={icon.imgSrc[iconsType]} name={icon.name} isActive={openedPrograms.some(p => p.id === icon.id)}/>
+                        </EchoIcon> 
                     </TaskbarContextMenu>
                 ))}
             </div>

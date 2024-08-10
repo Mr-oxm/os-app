@@ -10,7 +10,7 @@ const ThemesSettings = () => {
     const options= ['blue-theme', 'red-theme','green-theme','yellow-theme','purple-theme']
 
     const ThemeButton=({themeName}:{themeName:string})=>{return(
-        <Button className={`text-xs !p-0 w-full md:w-2/5 h-fit flex flex-col justify-start ${themeName} text-foreground ${sysTheme===themeName? 'btn2-selected' : 'btn2'}`} onClick={() => {setTheme(themeName); setSysTheme(themeName);}}>
+        <Button className={`text-xs !p-0 w-full h-fit flex flex-col justify-start ${themeName} text-foreground ${sysTheme===themeName? 'btn2-selected' : 'btn2'}`} onClick={() => {setTheme(themeName); setSysTheme(themeName);}}>
             <div className="bg-background p-2 capitalize w-full">
                 {themeName}
             </div>
@@ -27,7 +27,7 @@ const ThemesSettings = () => {
         <>
             <div className="h-full">
                 <h2 className="text-xl font-bold mb-4 p-1">Choose Theme</h2>
-                <div className="flex flex-col md:flex-row flex-wrap gap-2 p-1 "> 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-1 "> 
                     <ThemeButton themeName="light"/> 
                     <ThemeButton themeName="dark"/> 
                     {/* {systemThemes.map(theme=>(

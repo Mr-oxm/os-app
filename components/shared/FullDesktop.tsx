@@ -7,15 +7,11 @@ import MacTopbar from "@/components/shared/topbar/macTopbar"
 import Windows11Taskbar from "./taskbar/windowsTaskbar"
 import useAppStore from "@/lib/Store/useAppStore"
 import Loading from '@/components/shared/Loading' 
-import Image from 'next/image'
-import { Label } from '@radix-ui/react-context-menu'
-import { Button } from '../ui/button'
 import MainLockScreen from './lockscreens/MainLockScreen'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card' 
 import LinuxTopbar from './topbar/LinuxTopbar'
 import LinuxTaskbar from './taskbar/LinuxTaskbar' 
-import OXMTaskbar from './taskbar/OXMTaskbar'
-import TempTaskbar from './taskbar/TempTaskbar'
+import OXMTaskbar from './taskbar/OXMTaskbar' 
 import OXMTopbar from './topbar/OXMTopbar'
 import WidgetsDesktopBody from './desktopBody/WidgetsDesktopBody'
 
@@ -28,7 +24,7 @@ const FullDesktop = ({ children }: { children: React.ReactNode }) => {
         // Simulate page loading
         const timer = setTimeout(() => {
             setIsLoading(false)
-        }, 1000) // Adjust this value based on your actual loading time
+        }, 3000) // Adjust this value based on your actual loading time
 
         return () => clearTimeout(timer)
     }, [])
@@ -75,13 +71,13 @@ const FullDesktop = ({ children }: { children: React.ReactNode }) => {
         </HoverCard>
     ]
 
-    // if (isLoading) {
-    //     return <Loading />
-    // }
+    if (isLoading) {
+        return <Loading />
+    }
     
-    // if(isLocked)return(
-    //     <MainLockScreen wallpaper={wallpaper} setIsLocked={setIsLocked}/>
-    // )
+    if(isLocked)return(
+        <MainLockScreen wallpaper={wallpaper} setIsLocked={setIsLocked}/>
+    )
     return (
         <main 
             className={`!cursor-macos ${sysColor} flex h-screen w-screen flex-col items-center justify-between max-h-screen max-w-screen overflow-hidden bg-cover bg-center ${fontType}`}

@@ -6,8 +6,9 @@ import { useState } from "react";
 interface iIcons{
     imgSrc:string|StaticImageData,
     name:string, 
+    isActive:boolean;
 }
-const OXMDockIcon = ({imgSrc, name}:iIcons) => { 
+const OXMDockIcon = ({imgSrc, name, isActive}:iIcons) => { 
     const {taskbarDir } = useAppStore(); 
 
     return (
@@ -22,7 +23,7 @@ const OXMDockIcon = ({imgSrc, name}:iIcons) => {
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>  
-            <div className="hidden absolute top-9 h-0 w-0 border-white border-solid border-2 rounded-full hover:hidden"></div>
+            <div className={` ${!isActive&&"hidden"} absolute top-10 h-0 w-0 border-white border-solid border-2 rounded-full group-hover:opacity-0 opacity-100`}></div>
         </div>
     )
 } 
