@@ -133,7 +133,7 @@ const FinderApp: React.FC = () => {
     ];
 
     // Helper functions
-    const getImgSrc = (): string|StaticImageData => {if(FoldersIcons[0].files) return FoldersIcons[0].files[iconsType]; return "";}
+    const getImgSrc = (): string|StaticImageData => {if(FoldersIcons['files'][iconsType]) return FoldersIcons['files'][iconsType]; return "";}
 
     const filteredFiles = files.filter(file => 
         file.name.toLowerCase().includes(searchTerm.toLowerCase())

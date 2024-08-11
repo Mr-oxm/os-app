@@ -42,7 +42,7 @@ const Setting = ({
 }) => {
     return (
         <Button 
-            className={`w-full h-auto aspect-square md:aspect-auto text-left flex flex-row gap-2 justify-center md:justify-start text-xs !rounded-full md:card ${
+            className={`w-full text-left flex flex-row gap-2 justify-center md:justify-start text-xs !rounded-full md:card ${
                 isSelected 
                     ? "bg-primary !text-primary-foreground" 
                     : "text-foreground  bgOpacity hover:!bg-foreground/20 "

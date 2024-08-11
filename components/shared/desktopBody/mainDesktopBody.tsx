@@ -14,6 +14,10 @@ interface IconData {
     name: string;
 };
 
+type FolderIconType = {
+    [key: string]: (string | StaticImageData)[];
+};
+
 const SortableItem = ({ id, imgSrc, name }:{id:string|number, imgSrc:string|StaticImageData, name:string}) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
@@ -46,10 +50,10 @@ const MainDesktopBody = ({children}:any) => {
         }
     };
 
-    const getImgSrc = (id: string): string|StaticImageData => {
-        const folder = FoldersIcons.find(folder => id in folder);
-        if (folder) {
-            return folder[id][iconsType];
+    const getImgSrc = (id: string): string | StaticImageData => {
+        const folderKey = Object.keys(FoldersIcons).find(key => key === id);
+        if (folderKey) {
+            return FoldersIcons[folderKey as keyof typeof FoldersIcons][iconsType] as string | StaticImageData;
         }
         return '';
     };
