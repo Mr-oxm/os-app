@@ -9,7 +9,7 @@ const SettingsApp = () => {
     const [selectedIndex, setSelectedIndex] = useState(0)
 
     return (
-        <div className="flex flex-row w-full h-full p-2 gap-2">
+        <div className="flex flex-row w-full h-full p-2 gap-2 ">
             <ScrollArea className="w-2/12 md:w-1/3">
                 <div className="!flex flex-col h-full !gap-1 w-full">        {settingsMenu.map((item, index) => (
                         <Setting 
@@ -50,7 +50,7 @@ const Setting = ({
             onClick={onClick}
         >
             <span>{icon}</span>
-            <span className="hidden md:block">{name}</span> 
+            <span className="hidden md:block !truncate">{name}</span> 
         </Button>
     )
 } 

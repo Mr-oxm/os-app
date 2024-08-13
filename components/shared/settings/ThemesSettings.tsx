@@ -16,8 +16,8 @@ const ThemesSettings = () => {
             </div>
             <div className="bgOpacity p-2 capitalize w-full flex-grow ">
                 <div className="flex flex-col gap-1 text-left bg-card card">
-                    <span className="card bgOpacity">Normal choice</span>
-                    <span className="card bg-primary !text-primary-foreground">Selected choice</span>
+                    <span className="card bgOpacity !truncate">Normal choice</span>
+                    <span className="card bg-primary !text-primary-foreground !truncate">Selected choice</span>
                 </div>
             </div>
             

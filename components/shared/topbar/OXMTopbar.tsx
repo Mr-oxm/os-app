@@ -113,8 +113,8 @@ function SystemTrayMenu() {
     <PopoverContent className={`w-80 card bgOpacity backdrop-blur-md mt-1 overflow-hidden flex flex-col gap-3 mr-4 ${sysColor}`}>
         <div className="grid grid-cols-3 gap-2 card bgOpacity">
             {quickSettings.map(({ icon: Icon, label }) => (
-            <div className="flex flex-col items-center gap-2">
-                <Button key={label} variant="ghost" className=" h-20 overflow-hidden w-full flex flex-col gap-2 group btn2 !drop-shadow-none">
+            <div className="flex flex-col items-center gap-2" key={label}>
+                <Button  variant="ghost" className=" h-20 overflow-hidden w-full flex flex-col gap-2 group btn2 !drop-shadow-none">
                     <Icon className="h-4 w-4" />
                     <span className="text-xs text-wrap opacity-0 h-0 group-hover:h-6 group-hover:opacity-100 transition-all ease-in-out">{label}</span>
                 </Button>

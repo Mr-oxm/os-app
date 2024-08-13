@@ -17,7 +17,7 @@ const MainLockScreen = ({ wallpaper, setIsLocked }: { wallpaper: string; setIsLo
     }, [isUnlocking, setIsLocked]);
 
     return (
-        <div className={`fixed inset-0 transition-opacity duration-500 ${isUnlocking ? 'opacity-0' : 'opacity-100'}`}>
+        <div className={`z-[100] fixed inset-0 transition-opacity duration-500 ${isUnlocking ? 'opacity-0' : 'opacity-100'}`}>
             <main 
                 className={`cursor-macos flex h-screen w-screen flex-col items-center justify-between max-h-screen max-w-screen overflow-hidden bg-cover bg-center animate-fadeIn`}
                 style={{ backgroundImage: `url('/wallpapers/${wallpaper}')` }}

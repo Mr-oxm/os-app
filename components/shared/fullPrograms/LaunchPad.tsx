@@ -25,11 +25,13 @@ const LaunchPad = () => {
                 {SystemAppsIcons.map((icon, index) => ( 
                     (icon.id!=='launchpad')&&
                     (<Button 
+                        key={index}
                         variant="ghost" 
                         className={`!p-6 w-full h-full group border btn flex flex-col gap-2`}  
                         onClick={() => handleProgram(icon.id)}
                     >
                         <Image 
+                            key={index}
                             src={icon.imgSrc[iconsType]} 
                             alt={icon.name} 
                             width={200}

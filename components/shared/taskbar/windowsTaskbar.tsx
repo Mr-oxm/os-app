@@ -191,8 +191,8 @@ function SystemTrayMenu() {
     <PopoverContent className="w-80 p-0 bg-background/80 backdrop-blur-md mb-3 overflow-hidden mr-2">
         <div className="grid grid-cols-3 gap-2 p-4">
             {quickSettings.map(({ icon: Icon, label }) => (
-            <div className="flex flex-col items-center gap-2">
-                <Button key={label} variant="ghost" className="flex flex-col items-center justify-center h-12 p-1.5  border border-accent/25 bg-accent/40 w-full">
+            <div className="flex flex-col items-center gap-2" key={label}>
+                <Button  variant="ghost" className="flex flex-col items-center justify-center h-12 p-1.5  border border-accent/25 bg-accent/40 w-full">
                     <Icon className="h-4 w-4" />
                 </Button>
                 <span className="text-xs">{label}</span>

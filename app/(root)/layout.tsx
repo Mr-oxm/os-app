@@ -29,7 +29,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="./icons/os_icon2.svg" sizes="any" />
       </head>
-      <body className={inter.className}>
+      <body>
         <ThemeProvider
               attribute="class"
               defaultTheme="system"
