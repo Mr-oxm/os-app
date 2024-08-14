@@ -6,7 +6,7 @@ import useOSMemoryStore from "@/lib/Store/useOSMemoryStore";
 import { useTaskbarStore } from "@/lib/Store/useTaskbarStore";
 import TaskbarContextMenu from "./TaskbarContextMenu";
 
-export default function MainTaskbar() { 
+export default function MacTaskbar() { 
     const { iconsType, taskbarDir } = useAppStore();
     const {TaskbarIcons,openProgram}= useTaskbarStore();
     const { openedPrograms, minimizeProgram, maximizeProgram } = useOSMemoryStore();

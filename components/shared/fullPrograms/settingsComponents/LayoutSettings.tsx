@@ -51,7 +51,7 @@ const LayoutSettings: React.FC = () => {
                 {renderButtons("Choose Taskbar Position", taskDirections, taskbarDir, setTaskbarDir, taskbarPos===1)} 
                 {renderButtons("Choose Taskbar Position", positions, taskbarPos, handleTaskbarPos, taskbarType===3)} 
             </div> 
-            <h2 className="text-xl font-bold ">Topkbar</h2>
+            <h2 className="text-xl font-bold ">Topbar</h2>
             <div className='bgOpacity card flex flex-col w-full gap-4'> 
                 {renderButtons("Choose Topbar", themes, topbarType, setTopbarType)}
             </div>

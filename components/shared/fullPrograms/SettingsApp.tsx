@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button" 
 import { ReactElement, useState } from "react" 
 import { settingsMenu } from "@/lib/constants" 
-import SettingsContent from "@/components/shared/settings/SettingsContent"
+import SettingsContent from "./settingsComponents/SettingsContent"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const SettingsApp = () => {

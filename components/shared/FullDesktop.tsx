@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import MainDesktopBody from "@/components/shared/desktopBody/mainDesktopBody"
-import MainTaskbar from "@/components/shared/taskbar/mainTaskbar"
+import MacTaskbar from "@/components/shared/taskbar/MacTaskbar"
 import MacTopbar from "@/components/shared/topbar/macTopbar"
 import Windows11Taskbar from "./taskbar/windowsTaskbar"
 import useAppStore from "@/lib/Store/useAppStore"
@@ -15,13 +15,30 @@ import OXMTaskbar from './taskbar/OXMTaskbar'
 import OXMTopbar from './topbar/OXMTopbar'
 import WidgetsDesktopBody from './desktopBody/WidgetsDesktopBody'
 
+// Define types for better readability
+type DesktopComponentType = React.ReactElement
+type TaskbarComponentType = React.ReactElement
+type TopbarComponentType = React.ReactElement | null
+
 const FullDesktop = ({ children }: { children: React.ReactNode }) => { 
-    const { mainbodyType, taskbarType, topbarType, wallpaper, firstboot, taskbarPos,taskbarDir, fontType, sysColor} = useAppStore()
+    // Extract state from app store
+    const { 
+        mainbodyType, 
+        taskbarType, 
+        topbarType, 
+        wallpaper, 
+        taskbarPos,
+        taskbarDir, 
+        fontType, 
+        sysColor
+    } = useAppStore()
+
+    // State for loading and lock screen
     const [isLoading, setIsLoading] = useState(true)
     const [isLocked, setIsLocked] = useState(true)
 
+    // Simulating initial page load
     useEffect(() => {
-        // Simulate page loading
         const timer = setTimeout(() => {
             setIsLoading(false)
         }, 3000) // Adjust this value based on your actual loading time
@@ -29,6 +46,7 @@ const FullDesktop = ({ children }: { children: React.ReactNode }) => {
         return () => clearTimeout(timer)
     }, [])
 
+    // Lock screen when tab is not visible
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden) {
@@ -43,48 +61,67 @@ const FullDesktop = ({ children }: { children: React.ReactNode }) => {
         }
     }, [])
     
-    
-    
-    const DesktopComponents = [
-        <MainDesktopBody key="main" children={children}/>,
-        <WidgetsDesktopBody key="widgets"  children={children}/>, 
+    // Define available desktop components
+    const DesktopComponents: DesktopComponentType[] = [
+        <MainDesktopBody key="main">{children}</MainDesktopBody>,
+        <WidgetsDesktopBody key="widgets">{children}</WidgetsDesktopBody>, 
     ]
-    const taskBarComponents = [
-        <MainTaskbar key="main" />,
+
+    // Define available taskbar components
+    const taskBarComponents: TaskbarComponentType[] = [
+        <MacTaskbar key="mac" />,
         <Windows11Taskbar key="windows11" />, 
         <LinuxTaskbar key="linux"/>,
-        <OXMTaskbar/>
+        <OXMTaskbar key="oxm"/>
     ]
-    const topBarComponents = [
+
+    // Define available topbar components
+    const topBarComponents: TopbarComponentType[] = [
         <MacTopbar key="mac" />,
-        <></>,
-        <LinuxTopbar/>,
-        <OXMTopbar/>
+        null,
+        <LinuxTopbar key="linux"/>,
+        <OXMTopbar key="oxm"/>
     ]
-    const taskbarPosition=[
-        <>{taskBarComponents[taskbarType]}</>,
-        <HoverCard>
-            <HoverCardTrigger className={`text-background w-3/5 absolute bottom-0 h-8 rounded-full border-white hover:border-b-8 blur-2xl transition-all z-50`}></HoverCardTrigger>
-            <HoverCardContent className='bg-transparent w-fit border-0 shadow-none h-fit p-0'>
+
+    // Define taskbar positions
+    const taskbarPosition = [
+        taskBarComponents[taskbarType],
+        <HoverCard key="hover">
+            <HoverCardTrigger className="text-background w-3/5 absolute bottom-0 h-8 rounded-full border-white hover:border-b-8 blur-2xl transition-all z-50" />
+            <HoverCardContent className='bg-transparent w-fit border-0 shadow-none h-fit p-0 translate-y-8'>
                 {taskBarComponents[taskbarType]} 
             </HoverCardContent>
         </HoverCard>
     ]
 
+    // Show loading screen
     if (isLoading) {
         return <Loading />
     }
     
-    if(isLocked)return(
-        <MainLockScreen wallpaper={wallpaper} setIsLocked={setIsLocked}/>
-    )
+    // Show lock screen
+    if (isLocked) {
+        return <MainLockScreen wallpaper={wallpaper} setIsLocked={setIsLocked}/>
+    }
+
+    // Determine taskbar direction class
+    const getTaskbarDirectionClass = () => {
+        switch(taskbarDir) {
+            case 0: return "flex-col"
+            case 1: return "flex-row"
+            case 2: return "flex-row-reverse"
+            default: return "flex-col"
+        }
+    }
+
+    // Main desktop render
     return (
         <main 
             className={`!cursor-macos ${sysColor} flex h-screen w-screen flex-col items-center justify-between max-h-screen max-w-screen overflow-hidden bg-cover bg-center ${fontType}`}
             style={{ backgroundImage: `url('/wallpapers/${wallpaper}')` }}
         >
             {topBarComponents[topbarType]}
-            <div className={`flex relative ${taskbarDir==0? "flex-col":( taskbarDir==1? "flex-row":"flex-row-reverse")} {sysColor} flex-grow w-full items-center`}>
+            <div className={`flex relative ${getTaskbarDirectionClass()} ${sysColor} flex-grow w-full items-center`}>
                 {DesktopComponents[mainbodyType]} 
                 {taskbarPosition[taskbarPos]}
             </div>
