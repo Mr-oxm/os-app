@@ -1,10 +1,12 @@
+import Image, { StaticImageData } from 'next/image';
 import React, { useState, useCallback, useRef } from 'react';
 
 interface EchoIconProps {
     children: React.ReactNode;
+    imgsrc:any;
 }
 
-const EchoIcon: React.FC<EchoIconProps> = ({ children }) => {
+const EchoIcon: React.FC<EchoIconProps> = ({ children, imgsrc }) => {
     const [echoes, setEchoes] = useState<number[]>([]);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -19,6 +21,7 @@ const EchoIcon: React.FC<EchoIconProps> = ({ children }) => {
         timeoutRef.current = setTimeout(() => {
             setEchoes(prev => prev.filter(time => now - time < 300));
         }, 300);
+        setEchoes([0]);
     }, []);
 
     return (
@@ -28,7 +31,7 @@ const EchoIcon: React.FC<EchoIconProps> = ({ children }) => {
                     key={id}
                     className="absolute inset-0 animate-echo pointer-events-none"
                 >
-                    {children}
+                    <Image key={id} src={imgsrc} width={500} height={500} alt="echo"/>
                 </div>
             ))}
             <div onClick={handleClick}>{children}</div>

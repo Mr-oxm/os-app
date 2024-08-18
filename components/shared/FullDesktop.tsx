@@ -14,6 +14,7 @@ import LinuxTaskbar from './taskbar/LinuxTaskbar'
 import OXMTaskbar from './taskbar/OXMTaskbar' 
 import OXMTopbar from './topbar/OXMTopbar'
 import WidgetsDesktopBody from './desktopBody/WidgetsDesktopBody'
+import Image from 'next/image'
 
 // Define types for better readability
 type DesktopComponentType = React.ReactElement
@@ -46,20 +47,20 @@ const FullDesktop = ({ children }: { children: React.ReactNode }) => {
         return () => clearTimeout(timer)
     }, [])
 
-    // Lock screen when tab is not visible
-    useEffect(() => {
-        const handleVisibilityChange = () => {
-            if (document.hidden) {
-                setIsLocked(true)
-            }
-        }
+    // // Lock screen when tab is not visible
+    // useEffect(() => {
+    //     const handleVisibilityChange = () => {
+    //         if (document.hidden) {
+    //             setIsLocked(true)
+    //         }
+    //     }
 
-        document.addEventListener('visibilitychange', handleVisibilityChange)
+    //     document.addEventListener('visibilitychange', handleVisibilityChange)
 
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange)
-        }
-    }, [])
+    //     return () => {
+    //         document.removeEventListener('visibilitychange', handleVisibilityChange)
+    //     }
+    // }, [])
     
     // Define available desktop components
     const DesktopComponents: DesktopComponentType[] = [
@@ -120,6 +121,8 @@ const FullDesktop = ({ children }: { children: React.ReactNode }) => {
             className={`!cursor-macos ${sysColor} flex h-screen w-screen flex-col items-center justify-between max-h-screen max-w-screen overflow-hidden bg-cover bg-center ${fontType}`}
             style={{ backgroundImage: `url('/wallpapers/${wallpaper}')` }}
         >
+            {/* <Image src={`/wallpapers/${wallpaper}`} alt={wallpaper} layout='fill' 
+      objectFit='cover' className='absolute w-screen h-screen ' /> */}
             {topBarComponents[topbarType]}
             <div className={`flex relative ${getTaskbarDirectionClass()} ${sysColor} flex-grow w-full items-center`}>
                 {DesktopComponents[mainbodyType]} 

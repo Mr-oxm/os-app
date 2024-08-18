@@ -9,20 +9,20 @@ import AboutSection from "./AboutSection"
 
 const SettingsContent = ({ index }: { index: number }) => {
     const components = [
-        <ThemesSettings />,
-        <WallpaperPanel />,
-        <IconsPanel />,
-        <LayoutSettings/>,
-        // <TaskbarSettings/>,
-        <BootingSettings/>,
-        <FontSettings/>,
-        <PresetsSettings/>,
-        <AboutSection/>
+        ThemesSettings,
+        WallpaperPanel,
+        IconsPanel,
+        LayoutSettings,
+        BootingSettings,
+        FontSettings,
+        PresetsSettings,
+        AboutSection,
     ]
 
+    const Component = components[index];
     return (
         <>
-        {components[index] || <div>No component found for this index</div>}
+        {<Component/> || <div>No component found for this index</div>}
         </>
     )
 }

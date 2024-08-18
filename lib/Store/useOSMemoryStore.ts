@@ -1,27 +1,16 @@
 import { create } from 'zustand';
-import SettingsApp from '@/components/shared/fullPrograms/SettingsApp';
-import TerminalApp from '@/components/shared/fullPrograms/TerminalApp';
-import CalculatorApp from '@/components/shared/fullPrograms/CalculatorApp';
-import FinderApp from '@/components/shared/fullPrograms/FinderApp';
-import VideoPlayer from '@/components/shared/fullPrograms/VideoPlayer';
-import Gallery from '@/components/shared/fullPrograms/Gallary'; 
-import Camera from '@/components/shared/fullPrograms/Camera';
-import MusicApp from '@/components/shared/fullPrograms/MusicApp';
-import VoiceRecorder from '@/components/shared/fullPrograms/VoiceRecorder';
-import LaunchPad from '@/components/shared/fullPrograms/LaunchPad';
 
-interface Program {
+interface ProgramInfo {
     id: string;
     name: string;
-    component: React.ComponentType;
 }
 
-interface OpenedProgram extends Program {
+interface OpenedProgram extends ProgramInfo {
     minimized: boolean;
 }
 
 interface AppState {
-    possiblePrograms: Program[];
+    possiblePrograms: ProgramInfo[];
     openedPrograms: OpenedProgram[];
     openProgram: (id: string) => void;
     closeProgram: (id: string) => void;
@@ -31,24 +20,24 @@ interface AppState {
     setActive: (id: string) => void;
 }
 
-const initialPrograms: Program[] = [
-    { id: 'launchpad', name: 'Launchpad', component: LaunchPad },
-    { id: 'settings', name: 'Settings', component: SettingsApp },
-    { id: 'terminal', name: 'Terminal', component: TerminalApp },
-    { id: 'calculator', name: 'Calculator', component: CalculatorApp },
-    { id: 'finder', name: 'Finder', component: FinderApp },
-    { id: 'trash', name: 'Trash', component: FinderApp },
-    { id: 'player', name: 'Player', component: VideoPlayer },
-    { id: 'gallery', name: 'Gallery', component: Gallery },
-    { id: 'camera', name: 'Camera', component: Camera },
-    { id: 'music', name: 'Music', component: MusicApp },
-    { id: 'recorder', name: 'Recorder', component: VoiceRecorder },
+const programInfoCollection: ProgramInfo[] = [
+    { id: 'launchpad', name: 'Launchpad'},
+    { id: 'settings', name: 'Settings' },
+    { id: 'terminal', name: 'Terminal'},
+    { id: 'calculator', name: 'Calculator'},
+    { id: 'finder', name: 'Finder'},
+    { id: 'trash', name: 'Trash'},
+    { id: 'player', name: 'Player'},
+    { id: 'gallery', name: 'Gallery' },
+    { id: 'camera', name: 'Camera'},
+    { id: 'music', name: 'Music'},
+    { id: 'recorder', name: 'Recorder'},
 ];
 
 const useOSMemoryStore = create<AppState>((set) => ({
     active: "",
     setActive: (id) => set({ active: id }),
-    possiblePrograms: initialPrograms,
+    possiblePrograms: programInfoCollection,
     openedPrograms: [],
     openProgram: (id) => set((state) => {
         const program = state.possiblePrograms.find(p => p.id === id);

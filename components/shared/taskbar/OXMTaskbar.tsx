@@ -30,7 +30,7 @@ const OXMTaskbar = () => {
                         }")}
                         }`}
                     >
-                        <EchoIcon>
+                        <EchoIcon imgsrc={icon.imgSrc[iconsType]}>
                             <OXMDockIcon imgSrc={icon.imgSrc[iconsType]} name={icon.name} isActive={openedPrograms.some(p => p.id === icon.id)}/>
                         </EchoIcon> 
                     </TaskbarContextMenu>
