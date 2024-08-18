@@ -1,4 +1,3 @@
-// useAppStore.ts
 import { create } from 'zustand';
 import SettingsApp from '@/components/shared/fullPrograms/SettingsApp';
 import TerminalApp from '@/components/shared/fullPrograms/TerminalApp';
@@ -28,34 +27,36 @@ interface AppState {
     closeProgram: (id: string) => void;
     minimizeProgram: (id: string) => void;
     maximizeProgram: (id: string) => void;
-    active:string;
+    active: string;
     setActive: (id: string) => void;
 }
 
+const initialPrograms: Program[] = [
+    { id: 'launchpad', name: 'Launchpad', component: LaunchPad },
+    { id: 'settings', name: 'Settings', component: SettingsApp },
+    { id: 'terminal', name: 'Terminal', component: TerminalApp },
+    { id: 'calculator', name: 'Calculator', component: CalculatorApp },
+    { id: 'finder', name: 'Finder', component: FinderApp },
+    { id: 'trash', name: 'Trash', component: FinderApp },
+    { id: 'player', name: 'Player', component: VideoPlayer },
+    { id: 'gallery', name: 'Gallery', component: Gallery },
+    { id: 'camera', name: 'Camera', component: Camera },
+    { id: 'music', name: 'Music', component: MusicApp },
+    { id: 'recorder', name: 'Recorder', component: VoiceRecorder },
+];
+
 const useOSMemoryStore = create<AppState>((set) => ({
-    active:"",
-    setActive: (id)=>set(() => ({
-        active:id
-    })),
-    possiblePrograms: [
-        { id: 'launchpad', name: 'Launchpad', component: LaunchPad },
-        { id: 'settings', name: 'Settings', component: SettingsApp },
-        { id: 'terminal', name: 'Terminal', component: TerminalApp },
-        { id: 'calculator', name: 'Calculator', component: CalculatorApp },
-        { id: 'finder', name: 'Finder', component: FinderApp },
-        { id: 'trash', name: 'Trash', component: FinderApp },
-        { id: 'player', name: 'Player', component: VideoPlayer },
-        { id: 'gallery', name: 'Gallery', component: Gallery },
-        { id: 'camera', name: 'Camera', component: Camera },
-        { id: 'music', name: 'Music', component: MusicApp },
-        { id: 'recorder', name: 'Recorder', component: VoiceRecorder },
-    ],
+    active: "",
+    setActive: (id) => set({ active: id }),
+    possiblePrograms: initialPrograms,
     openedPrograms: [],
     openProgram: (id) => set((state) => {
         const program = state.possiblePrograms.find(p => p.id === id);
         if (program && !state.openedPrograms.some(p => p.id === id)) {
-            state.setActive(id);
-            return { openedPrograms: [...state.openedPrograms, { ...program, minimized: false }] };
+            return { 
+                openedPrograms: [...state.openedPrograms, { ...program, minimized: false }],
+                active: id
+            };
         }
         return {};
     }),
@@ -64,15 +65,14 @@ const useOSMemoryStore = create<AppState>((set) => ({
     })),
     minimizeProgram: (id) => set((state) => ({
         openedPrograms: state.openedPrograms.map(p => 
-        p.id === id ? { ...p, minimized: true } : p
+            p.id === id ? { ...p, minimized: true } : p
         )
     })),
     maximizeProgram: (id) => set((state) => ({
         openedPrograms: state.openedPrograms.map(p => 
-        p.id === id ? { ...p, minimized: false } : p
+            p.id === id ? { ...p, minimized: false } : p
         )
     })),
-
 }));
 
 export default useOSMemoryStore;
