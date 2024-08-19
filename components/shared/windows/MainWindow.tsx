@@ -2,10 +2,11 @@
 import React from 'react';
 import useWindowLogic from './windowAssets/useWindowLogic';
 import { WindowProps } from './windowAssets/types';
-import MacButtons from './windowAssets/MacButtons';
-import WindowsButtons from './windowAssets/WindowsButtons';
 import ResizingSides from './windowAssets/ResizingSides';
 import {Lock } from 'lucide-react';
+import dynamic from 'next/dynamic';
+const MacButtons = dynamic(() => import('./windowAssets/MacButtons'));
+const WindowsButtons = dynamic(() => import('./windowAssets/WindowsButtons'));
 
 const MainWindow: React.FC<WindowProps> = ({
     children,

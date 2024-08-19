@@ -1,147 +1,183 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import useAppStore from '@/lib/Store/useAppStore';
 import useOSMemoryStore from '@/lib/Store/useOSMemoryStore';
 import { useTaskbarStore } from '@/lib/Store/useTaskbarStore';
+interface WindowState {
+    isClosing: boolean;
+    isOpening: boolean;
+    isMinimizing: boolean;
+    isMaximizing: boolean;
+    isMaximized: boolean;
+    position: { top: any; left: any };
+    lastPosition: { top: any; left: any };
+    isDragging: boolean;
+    isResizing: boolean;
+    offset: { x: number; y: number };
+    size: { width: string; height: string };
+    resizeDirection: string;
+  }
 
 const useWindowLogic = (programId: string, minimized: boolean) => {
-    const [isClosing, setIsClosing] = useState(false);
-    const [isOpening, setIsOpening] = useState(true);
-    const [isMinimizing, setIsMinimizing] = useState(false);
-    const [isMaximizing, setIsMaximizing] = useState(false);
-    const [isMaximized, setIsMaximized] = useState(true);
-    const [position, setPosition] = useState<{ top: any, left: any }>({ top: 0, left: 0 });
-    const [lastPosition, setLastPosition] = useState<{ top: any, left: any }>({ top: 0, left: 0 });
-    const [isDragging, setIsDragging] = useState(false);
-    const [isResizing, setIsResizing] = useState(false);
-    const [offset, setOffset] = useState({ x: 0, y: 0 });
-    const [size, setSize] = useState({ width: '100%', height: '100%' });
-    const [resizeDirection, setResizeDirection] = useState('');
-    const { windowType, windowDir } = useAppStore();
-    const { minimizeProgram, active, setActive } = useOSMemoryStore();
-    const { closeProgram } = useTaskbarStore();
+    const [windowState, setWindowState] = useState<WindowState>({
+        isClosing: false,
+        isOpening: true,
+        isMinimizing: false,
+        isMaximizing: false,
+        isMaximized: true,
+        position: { top: 0, left: 0 },
+        lastPosition: { top: 0, left: 0 },
+        isDragging: false,
+        isResizing: false,
+        offset: { x: 0, y: 0 },
+        size: { width: '100%', height: '100%' },
+        resizeDirection: '',
+      });
+
+      const { windowType, windowDir } = useAppStore();
+      const { minimizeProgram, active, setActive } = useOSMemoryStore();
+      const { closeProgram } = useTaskbarStore();
 
     const handleExit = useCallback(() => {
-        setIsClosing(false);
+        setWindowState(prev => ({ ...prev, isClosing: false }));
         closeProgram(programId)
     }, [closeProgram, programId]);
 
     const handleMinimize = useCallback(() => { 
         minimizeProgram(programId);
-        setIsMinimizing(false);
+        setWindowState(prev => ({ ...prev, isMinimizing: false }));
     }, [minimizeProgram, programId]);
 
     const handleMaximize = useCallback(() => {
-        if (isMaximized) {
-            setIsMaximized(false);
-            setPosition(lastPosition);
-            setSize({ width: '50%', height: '50%' });
-        } else {
-            setIsMaximized(true);
-            setLastPosition(position);
-            setPosition({ top: 0, left: 0 });
-            setSize({ width: '100%', height: '100%' });
-            setIsDragging(false);
-        }
-    }, [isMaximized, lastPosition, position]);
+        setWindowState(prev => {
+            if (prev.isMaximized) {
+                return {
+                    ...prev,
+                    isMaximized: false,
+                    position: prev.lastPosition,
+                    size: { width: '50%', height: '50%' },
+                };
+            } else {
+                return {
+                    ...prev,
+                    isMaximized: true,
+                    lastPosition: prev.position,
+                    position: { top: 0, left: 0 },
+                    size: { width: '100%', height: '100%' },
+                    isDragging: false,
+                };
+            }
+        });
+    }, [windowState.isMaximized, windowState.lastPosition, windowState.position]);
 
     const handleMouseMove = useCallback((e: MouseEvent) => {
-        if (isDragging && !isMaximized) {
-            const newLeft = e.clientX - offset.x;
-            const newTop = e.clientY - offset.y;
-    
+        setWindowState(prev => {
+          if (prev.isDragging && !prev.isMaximized) {
+            const newLeft = e.clientX - prev.offset.x;
+            const newTop = e.clientY - prev.offset.y;
             const minVisible = 50;
             const maxLeft = window.innerWidth - minVisible;
             const maxTop = window.innerHeight - minVisible;
-    
-            setPosition({
+            return {
+              ...prev,
+              position: {
                 top: Math.max(0, Math.min(newTop, maxTop)),
                 left: Math.max(0, Math.min(newLeft, maxLeft)),
-            });
-        } else if (isResizing && !isMaximized) {
-            const newSize = { ...size };
-            const newPosition = { ...position };
-            const rect = document.getElementById(`window-${programId}`)!.getBoundingClientRect();
+              },
+            };
+          } else if (prev.isResizing && !prev.isMaximized) {
+            const rect = document.getElementById(`window-${programId}`)?.getBoundingClientRect();
+            if (!rect) return prev;
             const minWidth = 200;
             const minHeight = 100;
+            const newSize = { ...prev.size };
+            const newPosition = { ...prev.position };
     
-            switch (resizeDirection) { 
-                case 's':
-                    newSize.height = Math.max(minHeight, e.clientY - rect.top) + "px";
-                    break;
-                case 'w':
-                    newSize.width = Math.max(minWidth, rect.right - e.clientX) + "px";
-                    newPosition.left = Math.min(rect.right - minWidth, e.clientX);
-                    break;
-                case 'e':
-                    newSize.width = Math.max(minWidth, e.clientX - rect.left) + "px";
-                    break;
-                case 'sw':
-                    newSize.width = Math.max(minWidth, rect.right - e.clientX) + "px";
-                    newSize.height = Math.max(minHeight, e.clientY - rect.top) + "px";
-                    newPosition.left = Math.min(rect.right - minWidth, e.clientX);
-                    break;
-                case 'se':
-                    newSize.width = Math.max(minWidth, e.clientX - rect.left) + "px";
-                    newSize.height = Math.max(minHeight, e.clientY - rect.top) + "px";
-                    break;
+            switch (prev.resizeDirection) {
+              case 's':
+                newSize.height = `${Math.max(minHeight, e.clientY - rect.top)}px`;
+                break;
+              case 'w':
+                newSize.width = `${Math.max(minWidth, rect.right - e.clientX)}px`;
+                newPosition.left = Math.min(rect.right - minWidth, e.clientX);
+                break;
+              case 'e':
+                newSize.width = `${Math.max(minWidth, e.clientX - rect.left)}px`;
+                break;
+              case 'sw':
+                newSize.width = `${Math.max(minWidth, rect.right - e.clientX)}px`;
+                newSize.height = `${Math.max(minHeight, e.clientY - rect.top)}px`;
+                newPosition.left = Math.min(rect.right - minWidth, e.clientX);
+                break;
+              case 'se':
+                newSize.width = `${Math.max(minWidth, e.clientX - rect.left)}px`;
+                newSize.height = `${Math.max(minHeight, e.clientY - rect.top)}px`;
+                break;
             }
     
-            setSize(newSize);
-            setPosition(newPosition);
-        }
-    }, [isDragging, isResizing, offset, isMaximized, position, size, resizeDirection, programId]);
+            return { ...prev, size: newSize, position: newPosition };
+          }
+          return prev;
+        });
+    }, [windowState.isDragging, windowState.isResizing, windowState.offset, windowState.isMaximized, windowState.position, windowState.size, windowState.resizeDirection, programId]);
 
     const handleMouseUp = useCallback(() => {
-        setIsDragging(false);
-        setIsResizing(false);
+        setWindowState(prev => ({ ...prev, isDragging: false, isResizing: false }));
     }, []);
 
     const handleResizeStart = useCallback((direction: string) => (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        if (!isMaximized) {
-            setIsResizing(true);
-            setResizeDirection(direction);
-        }
-    }, [isMaximized]);
+        setWindowState(prev => {
+            if (!prev.isMaximized) {
+                return { ...prev, isResizing: true, resizeDirection: direction };
+            }
+            return prev;
+        });
+    }, [windowState.isMaximized]);
     
     const handleSplit = useCallback((direction: string) => {
-        if (!isMaximized) setIsMaximized(true);
-        switch (direction) {
-            case 'left':
-                setSize({ width: '50%', height: '100%' });
-                setPosition({ top: 0, left: 0 });
-                break;
-            case 'right':
-                setSize({ width: '50%', height: '100%' });
-                setPosition({ top: 0, left: '50%' });
-                break;
-            case 'NW':
-                setSize({ width: '50%', height: '50%' });
-                setPosition({ top: 0, left: 0 });
-                break;
-            case 'NE':
-                setSize({ width: '50%', height: '50%' });
-                setPosition({ top: 0, left: '50%' });
-                break;
-            case 'SW':
-                setSize({ width: '50%', height: '50%' });
-                setPosition({ top: '50%', left: 0 });
-                break;
-            case 'SE':
-                setSize({ width: '50%', height: '50%' });
-                setPosition({ top: '50%', left: '50%' });
-                break;
-        }
-    }, [isMaximized]);
+        setWindowState(prev => {
+            const newState = { ...prev, isMaximized: true };
+            switch (direction) {
+                case 'left':
+                    newState.size = { width: '50%', height: '100%' };
+                    newState.position = { top: 0, left: 0 };
+                    break;
+                case 'right':
+                    newState.size = { width: '50%', height: '100%' };
+                    newState.position = { top: 0, left: '50%' };
+                    break;
+                case 'NW':
+                    newState.size = { width: '50%', height: '50%' };
+                    newState.position = { top: 0, left: 0 };
+                    break;
+                case 'NE':
+                    newState.size = { width: '50%', height: '50%' };
+                    newState.position = { top: 0, left: '50%' };
+                    break;
+                case 'SW':
+                    newState.size = { width: '50%', height: '50%' };
+                    newState.position = { top: '50%', left: 0 };
+                    break;
+                case 'SE':
+                    newState.size = { width: '50%', height: '50%' };
+                    newState.position = { top: '50%', left: '50%' };
+                    break;
+            }
+            return newState;
+        });
+    }, [windowState.isMaximized]);
 
     useEffect(() => {
-        setIsMaximizing(!minimized);
-        setIsMinimizing(minimized);
+        setWindowState(prev => ({
+            ...prev,
+            isMaximizing: !minimized,
+            isMinimizing: minimized,
+        }));
     }, [minimized]);
     
     useEffect(() => {
-        if (isDragging || isResizing) {
+        if (windowState.isDragging || windowState.isResizing) {
             document.addEventListener('mousemove', handleMouseMove);
             document.addEventListener('mouseup', handleMouseUp);
         }
@@ -150,18 +186,11 @@ const useWindowLogic = (programId: string, minimized: boolean) => {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [isDragging, isResizing, handleMouseMove, handleMouseUp]);
+    }, [windowState.isDragging, windowState.isResizing, handleMouseMove, handleMouseUp]);
 
-    return {
-        isClosing,
-        isOpening,
-        isMinimizing,
-        isMaximizing,
-        isMaximized,
-        position,
-        size,
-        isDragging,
-        isResizing,
+
+    return useMemo(() => ({
+        ...windowState,
         windowType,
         windowDir,
         active,
@@ -173,12 +202,13 @@ const useWindowLogic = (programId: string, minimized: boolean) => {
         handleResizeStart,
         handleSplit,
         setActive,
-        setIsClosing,
-        setIsDragging,
-        setOffset, 
-        setIsMaximizing,
-        setIsOpening
-    };
+        setIsClosing: (isClosing: boolean) => setWindowState(prev => ({ ...prev, isClosing: isClosing })),
+        setIsDragging: (isDragging: boolean) => setWindowState(prev => ({ ...prev, isDragging: isDragging })),
+        setOffset: (offset: { x: number; y: number }) => setWindowState(prev => ({ ...prev, offset: offset })),
+        setIsMaximizing: (isMaximizing: boolean) => setWindowState(prev => ({ ...prev, isMaximizing: isMaximizing })),
+        setIsOpening: (isOpening: boolean) => setWindowState(prev => ({ ...prev, isOpening: isOpening })),
+      }), [windowState, windowType, windowDir, active, handleExit, handleMinimize, handleMaximize,
+        handleMouseMove, handleMouseUp, handleResizeStart, handleSplit, setActive]);
 };
 
 export default useWindowLogic;

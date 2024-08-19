@@ -1,30 +1,31 @@
-import IconsPanel from "./IconsPanel"
-import ThemesSettings from "./ThemesSettings"
-import WallpaperPanel from "./WallpaperPanel"
-import LayoutSettings from './LayoutSettings'
-import BootingSettings from "./BootingSettings" 
-import FontSettings from "./FontSettings"
-import PresetsSettings from "./PresetsSettings"
-import AboutSection from "./AboutSection"
+import dynamic from 'next/dynamic';
 
 const SettingsContent = ({ index }: { index: number }) => {
-    const components = [
-        ThemesSettings,
-        WallpaperPanel,
-        IconsPanel,
-        LayoutSettings,
-        BootingSettings,
-        FontSettings,
-        PresetsSettings,
-        AboutSection,
-    ]
+    const componentNames = [
+        "ThemesSettings",
+        "WallpaperPanel",
+        "IconsPanel",
+        "LayoutSettings",
+        "BootingSettings",
+        "FontSettings",
+        "PresetsSettings",
+        "AboutSection",
+    ];
 
-    const Component = components[index];
+    const Component = dynamic(() => import(`./${componentNames[index]}`), {
+        loading: () =><h2 className="text-xl font-bold mb-4 p-1">Loading...</h2>
+        ,
+    });
+
     return (
         <>
-        {<Component/> || <div>No component found for this index</div>}
+            {index >= 0 && index < componentNames.length ? (
+                <Component />
+            ) : (
+                <div>No component found for this index</div>
+            )}
         </>
-    )
-}
+    );
+};
 
-export default SettingsContent
+export default SettingsContent;

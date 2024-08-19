@@ -9,7 +9,7 @@ export interface ButtonProps {
     handleMinimize: () => void;
     handleMaximize: () => void;
     handleSplit: (direction: string) => void;
-    setIsClosing: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsClosing: (isClosing:boolean) => void;
     windowDir: number;
     windowType: number;
 }

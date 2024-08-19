@@ -1,20 +1,22 @@
 "use client"
 
-import { useState, useEffect } from 'react'
-import MainDesktopBody from "@/components/shared/desktopBody/mainDesktopBody"
-import MacTaskbar from "@/components/shared/taskbar/MacTaskbar"
-import MacTopbar from "@/components/shared/topbar/macTopbar"
-import Windows11Taskbar from "./taskbar/windowsTaskbar"
+import { useState, useEffect, useMemo, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import useAppStore from "@/lib/Store/useAppStore"
 import Loading from '@/components/shared/Loading' 
 import MainLockScreen from './lockscreens/MainLockScreen'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card' 
-import LinuxTopbar from './topbar/LinuxTopbar'
-import LinuxTaskbar from './taskbar/LinuxTaskbar' 
-import OXMTaskbar from './taskbar/OXMTaskbar' 
-import OXMTopbar from './topbar/OXMTopbar'
-import WidgetsDesktopBody from './desktopBody/WidgetsDesktopBody'
-import Image from 'next/image'
+
+// Dynamically import components
+const MainDesktopBody = dynamic(() => import("@/components/shared/desktopBody/mainDesktopBody"), { ssr: false })
+const WidgetsDesktopBody = dynamic(() => import('./desktopBody/WidgetsDesktopBody'), { ssr: false })
+const MacTaskbar = dynamic(() => import("@/components/shared/taskbar/MacTaskbar"), { ssr: false })
+const MacTopbar = dynamic(() => import("@/components/shared/topbar/macTopbar"), { ssr: false })
+const Windows11Taskbar = dynamic(() => import("./taskbar/windowsTaskbar"), { ssr: false })
+const LinuxTopbar = dynamic(() => import('./topbar/LinuxTopbar'), { ssr: false })
+const LinuxTaskbar = dynamic(() => import('./taskbar/LinuxTaskbar'), { ssr: false })
+const OXMTaskbar = dynamic(() => import('./taskbar/OXMTaskbar'), { ssr: false })
+const OXMTopbar = dynamic(() => import('./topbar/OXMTopbar'), { ssr: false })
 
 // Define types for better readability
 type DesktopComponentType = React.ReactElement
