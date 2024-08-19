@@ -14,7 +14,7 @@ const MacButtons: React.FC<ButtonProps> = ({ setIsClosing, handleMaximize, handl
         </button>
         <TooltipProvider>
             <Tooltip>
-                <TooltipTrigger className='!m-0 hidden md:block'>
+                <TooltipTrigger className='!m-0 hidden md:flex'>
                     <button onClick={handleMaximize} className="md:w-3 md:h-3 h-5 w-5 bg-window-max rounded-full group overflow-hidden !m-0">
                         <Maximize2 className='w-full h-full hidden group-hover:block'/>
                     </button>
