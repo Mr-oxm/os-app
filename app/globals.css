@@ -130,10 +130,10 @@
       @apply !rounded-xl !border !border-border/20 !p-3 !text-foreground  !drop-shadow-lg
     }
     .btn{
-      @apply !p-1 card bgOpacity hover:!bg-foreground/10 active:!bg-primary active:!text-primary-foreground bgblur
+      @apply !p-1 card bgOpacity hover:!bg-foreground/10 active:!bg-primary active:!text-primary-foreground
     }
     .btn-normal{
-      @apply card bgOpacity hover:!bg-foreground/10 active:!bg-primary active:!text-primary-foreground bgblur
+      @apply card bgOpacity hover:!bg-foreground/10 active:!bg-primary active:!text-primary-foreground
     }
 
     .btn2-selected{

@@ -8,8 +8,9 @@ import MainLockScreen from './lockscreens/MainLockScreen'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card' 
 
 // Dynamically import components
-const MainDesktopBody = dynamic(() => import("@/components/shared/desktopBody/mainDesktopBody"), { ssr: false })
-const WidgetsDesktopBody = dynamic(() => import('./desktopBody/WidgetsDesktopBody'), { ssr: false })
+import MainDesktopBody from"@/components/shared/desktopBody/mainDesktopBody"
+import WidgetsDesktopBody from'./desktopBody/WidgetsDesktopBody'
+
 const MacTaskbar = dynamic(() => import("@/components/shared/taskbar/MacTaskbar"), { ssr: false })
 const MacTopbar = dynamic(() => import("@/components/shared/topbar/macTopbar"), { ssr: false })
 const Windows11Taskbar = dynamic(() => import("./taskbar/windowsTaskbar"), { ssr: false })

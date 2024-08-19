@@ -101,8 +101,9 @@ const TerminalApp: React.FC = () => {
                     <div key={index} className="mb-2 whitespace-pre-wrap">{line}</div>
                 ))}
             </ScrollArea>
-            <form onSubmit={handleInputSubmit} className="p-4 flex card bgOpacity bgblur m-2">
-                <span className='mr-1 text-green-500'>$</span><input
+            <form onSubmit={handleInputSubmit} className="p-4 flex card bg-background m-2">
+                <span className='mr-1 text-green-500'>$</span>
+                <input
                     ref={inputRef}
                     type="text"
                     value={currentLine.slice(2)}
